@@ -1,0 +1,1990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEOS — The Operating System for Machine Intelligence</title>
+<meta name="description" content="NEOS: The first operating system for machine intelligence. A cinematic presentation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<style>
+/* ── NEOS CUSTOM THEME ── */
+:root {
+  --bg: #07070c;
+  --bg2: #0c0c14;
+  --bg3: #1a1a28;
+  --text: #e8e8ed;
+  --text-dim: #8888a0;
+  --cyan: #00d4ff;
+  --purple: #7b61ff;
+  --pink: #ff3d8e;
+  --green: #00ff88;
+  --gold: #ffd700;
+  --cyan-glow: rgba(0,212,255,0.15);
+  --purple-glow: rgba(123,97,255,0.15);
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Helvetica, sans-serif;
+  --font-display: "Outfit", system-ui, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", "Fira Code", Consolas, monospace;
+}
+
+/* ── Force dark background on every reveal.js container ── */
+html, body { background: var(--bg) !important; margin: 0; padding: 0; }
+.reveal-viewport { background: var(--bg) !important; }
+
+/* Reset reveal.js theme — high specificity overrides */
+.reveal,
+.reveal .slides section,
+.reveal .slides section .fragment { color: var(--text); }
+.reveal { font-family: var(--font); font-size: 28px; background: transparent !important; }
+.reveal .slides { text-align: left; }
+.reveal .slides section { background: rgba(7,7,12,0.72); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 18px; padding: 2.5rem 3rem; border: 1px solid rgba(0,212,255,0.06); }
+.reveal .slides section h1,
+.reveal .slides section h2,
+.reveal .slides section h3,
+.reveal .slides section h4 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; color: var(--text); text-transform: none; text-shadow: none; }
+.reveal .slides section h1 { font-size: 3.5rem; font-weight: 800; }
+.reveal .slides section h2 { font-size: 2rem; margin-bottom: 0.6em; }
+.reveal .slides section h3 { font-size: 1.15rem; color: var(--cyan); margin-bottom: 0.4em; }
+.reveal .slides section p { line-height: 1.55; max-width: 60ch; font-size: 0.7em; color: var(--text-dim); margin-bottom: 0.6em; }
+.reveal .slides section strong { color: #fff; }
+.reveal .slides section em { color: var(--cyan); font-style: italic; }
+.reveal .slides section code { font-family: var(--mono); font-size: 0.85em; background: var(--bg3); padding: 0.12em 0.35em; border-radius: 4px; color: var(--cyan); }
+.reveal .slides section a { color: var(--cyan); text-decoration: none; }
+.reveal .slides section a:hover { color: var(--purple); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 4px; }
+.reveal ::selection { background: var(--cyan); color: var(--bg); }
+
+/* Slide backgrounds */
+.reveal .slide-background,
+.reveal .slide-background-content { background: transparent !important; }
+.reveal .slides section.title-slide { text-align: center; background: rgba(7,7,12,0.5); border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.reveal .slides section.center-slide { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+/* Gradient text */
+.grad-text { background: linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.grad-warm { background: linear-gradient(135deg, var(--gold), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+/* Cards — match paper */
+.card { background: rgba(18,18,26,0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(0,212,255,0.08); border-radius: 16px; padding: 1.2rem; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+.card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; padding: 1px; background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(123,97,255,0.1), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+.card { position: relative; overflow: hidden; }
+.card:hover { transform: translateY(-2px); border-color: rgba(0,212,255,0.2); box-shadow: 0 8px 32px rgba(0,212,255,0.08), 0 0 20px rgba(0,212,255,0.04); }
+.glow-border { border: 1px solid rgba(0,212,255,0.15); box-shadow: 0 0 30px rgba(0,212,255,0.05), inset 0 0 30px rgba(0,212,255,0.02); }
+
+/* Grid layouts */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; width: 100%; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; width: 100%; }
+
+/* Equation box */
+.reveal .slides section .equation { background: var(--bg3); border-left: 3px solid var(--cyan); padding: 1rem 1.5rem; border-radius: 0 8px 8px 0; font-family: var(--mono); font-size: 0.75em; line-height: 1.7; box-shadow: 0 0 20px rgba(0,212,255,0.06); color: var(--cyan); }
+
+/* Terminal mockup */
+.reveal .slides section .terminal { background: #0c0c14; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; font-family: var(--mono); font-size: 0.55em; line-height: 1.5; width: 100%; }
+.reveal .slides .terminal-bar { background: #1a1a26; padding: 0.6rem 1rem; display: flex; gap: 6px; align-items: center; }
+.reveal .slides .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+.reveal .slides .terminal-dot:nth-child(1) { background: #ff5f57; }
+.reveal .slides .terminal-dot:nth-child(2) { background: #ffbd2e; }
+.reveal .slides .terminal-dot:nth-child(3) { background: #28c841; }
+.reveal .slides .terminal-body { padding: 0.8rem 1rem; color: var(--text-dim); }
+.reveal .slides .terminal-body .prompt { color: var(--cyan) !important; }
+.reveal .slides .terminal-body .cmd { color: #fff !important; }
+.reveal .slides .terminal-body .out { color: var(--text-dim) !important; display: block; }
+.reveal .slides .terminal-body .hl { color: var(--green) !important; }
+.reveal .slides .terminal-body .val { color: var(--pink) !important; }
+.reveal .slides .terminal-body .warn { color: var(--gold) !important; }
+
+/* Callout */
+.reveal .slides section .callout { background: linear-gradient(135deg, var(--cyan-glow), var(--purple-glow)); border: 1px solid rgba(0,212,255,0.12); border-radius: 12px; padding: 1.2rem; font-size: 0.75em; font-style: italic; color: var(--text); text-align: center; }
+
+/* SVG diagrams */
+.diagram { width: 100%; margin: 0.8rem 0; }
+.diagram svg { width: 100%; height: auto; display: block; }
+svg text { font-family: var(--font); }
+
+/* Glow effects */
+@keyframes pulse-glow { 0%, 100% { filter: drop-shadow(0 0 6px var(--cyan)); } 50% { filter: drop-shadow(0 0 18px var(--cyan)); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.anim-pulse { animation: pulse-glow 3s ease-in-out infinite; }
+
+/* CTA cards */
+.cta-card { text-align: center; padding: 1.5rem 1.2rem; border-radius: 16px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: relative; overflow: hidden; transition: all 0.3s; }
+.cta-card:hover { box-shadow: 0 8px 32px rgba(0,212,255,0.06); transform: translateY(-3px); }
+.cta-card:nth-child(1) { background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(18,18,26,0.6)); border: 1px solid rgba(0,212,255,0.15); }
+.cta-card:nth-child(2) { background: linear-gradient(135deg, rgba(123,97,255,0.1), rgba(18,18,26,0.6)); border: 1px solid rgba(123,97,255,0.15); }
+.cta-card:nth-child(3) { background: linear-gradient(135deg, rgba(255,61,142,0.1), rgba(18,18,26,0.6)); border: 1px solid rgba(255,61,142,0.15); }
+
+/* Reveal.js fragment overrides */
+.reveal .fragment { transition: all 0.4s ease; }
+.reveal .fragment.fade-up { transform: translateY(20px); }
+.reveal .fragment.fade-up.visible { transform: translateY(0); }
+.reveal .fragment.scale-in { transform: scale(0.85); }
+.reveal .fragment.scale-in.visible { transform: scale(1); }
+
+/* Section number badge */
+.reveal .slides section .sec-badge { font-family: var(--font-display); font-size: 0.5em; color: var(--purple); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.4em; display: block; }
+
+/* Speaker notes styling */
+.reveal aside.notes { font-size: 0.7em; }
+
+/* Canvas background */
+#wave-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.reveal { position: relative; z-index: 1; }
+
+/* Stat counter */
+.reveal .slides section .stat-num { font-size: 2.5rem; font-weight: 800; font-family: var(--font-display); margin: 0; line-height: 1; }
+
+/* Card text overrides to match paper */
+.reveal .slides section .card p { color: var(--text-dim); }
+.reveal .slides section .card h3 { color: var(--cyan); }
+.reveal .slides section .cta-card p { color: var(--text-dim); }
+
+/* Progress bar override */
+.reveal .progress { height: 3px; }
+.reveal .progress span { background: linear-gradient(90deg, var(--cyan), var(--purple)); }
+
+/* Controls */
+.reveal .controls { color: var(--cyan); }
+.reveal .controls button { color: var(--cyan); }
+
+/* Title chars for GSAP cascade */
+.hero-char { display: inline-block; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .anim-pulse { animation: none; }
+  .reveal .fragment { transition: none; }
+  #wave-bg { display: none; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .reveal .slides section { padding: 1.5rem; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .reveal h1 { font-size: 2.2rem; }
+}
+</style>
+</head>
+<body>
+<canvas id="wave-bg" aria-hidden="true"></canvas>
+
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <filter id="glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#00d4ff" flood-opacity="0.4" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#7b61ff" flood-opacity="0.4" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-pink" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#ff3d8e" flood-opacity="0.4" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
+
+<div class="reveal">
+<div class="slides">
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 1 — TITLE                            -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="title-slide" data-transition="fade">
+  <h1 id="hero-title" style="font-size:5rem;margin-bottom:0.2em"><span class="grad-text" id="hero-text">NEOS</span></h1>
+  <p style="font-size:0.85em;color:var(--text-dim);max-width:none;margin-bottom:0.3em" class="fragment fade-up">The Operating System for Machine Intelligence</p>
+  <p style="font-size:0.7em;font-style:italic;color:var(--text);max-width:none" class="fragment fade-up"><em style="color:var(--text)">"The last operating system will not manage files. It will manage meaning."</em></p>
+  <p style="font-size:0.45em;color:var(--text-dim);margin-top:2em;max-width:none" class="fragment fade-up">
+    <a href="https://samuele95.github.io/neos/neos-paper.pdf" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:none">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Read the Paper (PDF)</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://samuele95.github.io/neos/" target="_blank" rel="noopener" style="color:var(--text-dim);text-decoration:none">samuele95.github.io/neos</a>
+  </p>
+  <aside class="notes">Open with impact. Pause on the tagline — let it land. This is the thesis of the entire presentation.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 2 — THE THREE AGES                   -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">01 — The Grand Narrative</span>
+  <h2>The Three Ages of Computing</h2>
+  <div class="diagram">
+    <svg viewBox="0 0 900 190" role="img" aria-label="Timeline: Hardware, Software, Intelligence">
+      <title>Three Ages of Computing Timeline</title>
+      <line x1="50" y1="85" x2="850" y2="85" stroke="#333" stroke-width="2"/>
+      <polygon points="845,81 855,85 845,89" fill="#333"/>
+      <g class="fragment" data-fragment-index="1">
+        <circle cx="150" cy="85" r="8" fill="#555"/>
+        <text x="150" y="65" text-anchor="middle" fill="#888" font-size="15" font-weight="600">Hardware</text>
+        <text x="150" y="48" text-anchor="middle" fill="#555" font-size="11">1950s–1980s</text>
+        <text x="150" y="115" text-anchor="middle" fill="#666" font-size="11">Bottleneck: Physical</text>
+        <text x="150" y="132" text-anchor="middle" fill="#555" font-size="10">OS: Share the machine</text>
+        <text x="150" y="149" text-anchor="middle" fill="#555" font-size="10">Interface: Punch cards → CLI</text>
+      </g>
+      <g class="fragment" data-fragment-index="2">
+        <circle cx="450" cy="85" r="8" fill="#7b61ff"/>
+        <text x="450" y="65" text-anchor="middle" fill="#9b8aff" font-size="15" font-weight="600">Software</text>
+        <text x="450" y="48" text-anchor="middle" fill="#7b61ff" font-size="11">1980s–2020s</text>
+        <text x="450" y="115" text-anchor="middle" fill="#888" font-size="11">Bottleneck: Complexity</text>
+        <text x="450" y="132" text-anchor="middle" fill="#666" font-size="10">OS: Organize programs</text>
+        <text x="450" y="149" text-anchor="middle" fill="#666" font-size="10">Interface: GUI → Touch</text>
+      </g>
+      <g class="fragment" data-fragment-index="3">
+        <circle cx="750" cy="85" r="10" fill="#00d4ff" filter="url(#glow-cyan)"/>
+        <text x="750" y="63" text-anchor="middle" fill="#00d4ff" font-size="16" font-weight="700">Intelligence</text>
+        <text x="750" y="46" text-anchor="middle" fill="#00d4ff" font-size="11">2025+</text>
+        <text x="750" y="115" text-anchor="middle" fill="#00d4ff" font-size="11">Bottleneck: Meaning</text>
+        <text x="750" y="132" text-anchor="middle" fill="#0af" font-size="10">OS: Organize thinking</text>
+        <text x="750" y="149" text-anchor="middle" fill="#0af" font-size="10">Interface: Language → NEOS Shell</text>
+      </g>
+    </svg>
+  </div>
+  <p class="fragment fade-up" style="margin-top:0.5em">Each transition changes the <strong>nature of the bottleneck</strong>.</p>
+  <aside class="notes">Each age changed not just capability but what the bottleneck IS. Hardware → physical limits. Software → complexity. Intelligence → meaning itself.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 3 — THE BOTTLENECK SHIFT             -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">01 — The Shift</span>
+  <h2>Three Bottlenecks, Three Eras</h2>
+  <div class="grid-3">
+    <div class="card fragment fade-up" data-fragment-index="1">
+      <h3 style="color:#888">Hardware</h3>
+      <p style="font-size:0.65em">The CPU was sacred. Every cycle scheduled, every byte managed. OS answer: <strong>"How do we share this machine?"</strong></p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="2">
+      <h3 style="color:#9b8aff">Software</h3>
+      <p style="font-size:0.65em">Complexity became the enemy. Files, processes, threads — abstractions for managing code. OS answer: <strong>"How do we organize programs?"</strong></p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="3" style="border:1px solid rgba(0,212,255,0.2);box-shadow:0 0 20px rgba(0,212,255,0.06)">
+      <h3>Intelligence</h3>
+      <p style="font-size:0.65em">The challenge is <strong>semantic</strong>. How do you represent ideas? Track interpretations? Merge reasoning? OS answer: <strong>"How do we organize thinking?"</strong></p>
+    </div>
+  </div>
+  <div class="callout fragment fade-up" data-fragment-index="4" style="margin-top:1rem">
+    We don't need a better programming language. We need to stop programming — and start <strong>reasoning</strong>.
+  </div>
+  <aside class="notes">Key punchline: the OS question changed at each stage. NEOS answers the third question.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 4 — THE INVERSION                    -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">02 — The Vision</span>
+  <h2>The Inversion</h2>
+  <div class="diagram">
+    <svg viewBox="0 0 700 200" role="img" aria-label="Architecture inversion: LLM goes from app to foundation">
+      <title>The Architectural Inversion</title>
+      <g class="fragment" data-fragment-index="1">
+        <text x="150" y="22" text-anchor="middle" fill="#888" font-size="14" font-weight="600">Today</text>
+        <rect x="50" y="30" width="200" height="36" rx="6" fill="rgba(123,97,255,0.08)" stroke="#7b61ff" stroke-width="1"/>
+        <text x="150" y="53" text-anchor="middle" fill="#9b8aff" font-size="12">Applications</text>
+        <rect x="75" y="36" width="55" height="22" rx="4" fill="rgba(255,61,142,0.15)" stroke="#ff3d8e" stroke-width="1"/>
+        <text x="102" y="51" text-anchor="middle" fill="#ff3d8e" font-size="8">LLM App</text>
+        <rect x="50" y="72" width="200" height="36" rx="6" fill="rgba(123,97,255,0.05)" stroke="#555" stroke-width="1"/>
+        <text x="150" y="95" text-anchor="middle" fill="#888" font-size="12">Operating System</text>
+        <rect x="50" y="114" width="200" height="36" rx="6" fill="rgba(123,97,255,0.03)" stroke="#444" stroke-width="1"/>
+        <text x="150" y="137" text-anchor="middle" fill="#666" font-size="12">Hardware</text>
+      </g>
+      <g class="fragment" data-fragment-index="2">
+        <text x="350" y="90" text-anchor="middle" fill="#00d4ff" font-size="36">⇒</text>
+        <text x="350" y="115" text-anchor="middle" fill="#00d4ff" font-size="11">Inversion</text>
+      </g>
+      <g class="fragment" data-fragment-index="3">
+        <text x="550" y="22" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="600">Tomorrow</text>
+        <rect x="450" y="30" width="200" height="36" rx="6" fill="rgba(0,212,255,0.05)" stroke="#555" stroke-width="1"/>
+        <text x="550" y="53" text-anchor="middle" fill="#888" font-size="12">Human</text>
+        <rect x="450" y="72" width="200" height="36" rx="8" fill="rgba(0,212,255,0.1)" stroke="#00d4ff" stroke-width="2" class="anim-pulse"/>
+        <text x="550" y="95" text-anchor="middle" fill="#00d4ff" font-size="13" font-weight="700">NEOS</text>
+        <rect x="450" y="114" width="200" height="36" rx="6" fill="rgba(123,97,255,0.1)" stroke="#7b61ff" stroke-width="1.5"/>
+        <text x="550" y="137" text-anchor="middle" fill="#9b8aff" font-size="12">LLM (Foundation)</text>
+      </g>
+    </svg>
+  </div>
+  <p class="fragment fade-up" style="text-align:center;max-width:none">Today the LLM is an <strong>app</strong>. Tomorrow the LLM is the <strong>foundation</strong>. NEOS is the OS layer.</p>
+  <aside class="notes">The fundamental architectural insight: LLMs move from application layer to foundation layer. NEOS sits between human and LLM.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 5 — WHAT NEOS REPLACES               -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">02 — The Vision</span>
+  <h2>What NEOS Replaces</h2>
+  <div class="grid-2" style="max-width:100%">
+    <div class="card fragment fade-up" data-fragment-index="1" style="border-left:3px solid var(--pink)">
+      <h3 style="color:var(--pink)">No File Systems</h3>
+      <p style="font-size:0.6em"><strong>Semantic fields</strong> organize information by meaning. You don't navigate directories — you navigate ideas.</p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="2" style="border-left:3px solid var(--green)">
+      <h3 style="color:var(--green)">No Compiled Binaries</h3>
+      <p style="font-size:0.6em"><strong>Field configurations</strong> execute reasoning. A "program" is a pattern of activated concepts.</p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="3" style="border-left:3px solid var(--gold)">
+      <h3 style="color:var(--gold)">No Separate Apps</h3>
+      <p style="font-size:0.6em"><strong>Task definitions</strong> compose into workflows. Analysis, creativity, planning — field configurations, not executables.</p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="4" style="border-left:3px solid var(--purple)">
+      <h3 style="color:var(--purple)">No GUIs</h3>
+      <p style="font-size:0.6em">Natural language + the <strong>NEOS shell</strong>. Language for fluidity. Shell for precision.</p>
+    </div>
+  </div>
+  <aside class="notes">Each replacement is a conceptual leap. Files → semantic fields. Binaries → field configs. Apps → tasks. GUIs → language.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 6 — THREE PILLARS                    -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">03 — Architecture</span>
+  <h2>The Three Pillars</h2>
+  <div class="diagram">
+    <svg viewBox="0 0 700 250" role="img" aria-label="Three pillars: Neural Fields, Symbolic Reasoning, Quantum Semantics">
+      <title>Three Pillars of NEOS</title>
+      <g class="fragment" data-fragment-index="1">
+        <rect x="20" y="20" width="190" height="140" rx="10" fill="rgba(0,212,255,0.05)" stroke="#00d4ff" stroke-width="1.5"/>
+        <text x="115" y="50" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="700">Neural Fields</text>
+        <text x="115" y="68" text-anchor="middle" fill="#088" font-size="10">THE SUBSTRATE</text>
+        <text x="35" y="90" fill="#aaa" font-size="10">Continuous activation</text>
+        <text x="35" y="106" fill="#aaa" font-size="10">Resonance dynamics</text>
+        <text x="35" y="122" fill="#aaa" font-size="10">Attractor emergence</text>
+        <text x="35" y="138" fill="#aaa" font-size="10">Persistence via resonance</text>
+      </g>
+      <g class="fragment" data-fragment-index="2">
+        <rect x="250" y="20" width="190" height="140" rx="10" fill="rgba(123,97,255,0.05)" stroke="#7b61ff" stroke-width="1.5"/>
+        <text x="345" y="50" text-anchor="middle" fill="#7b61ff" font-size="14" font-weight="700">Symbolic Reasoning</text>
+        <text x="345" y="68" text-anchor="middle" fill="#5a44cc" font-size="10">THE STRUCTURE</text>
+        <text x="265" y="90" fill="#aaa" font-size="10">nf command algebra</text>
+        <text x="265" y="106" fill="#aaa" font-size="10">@pattern references</text>
+        <text x="265" y="122" fill="#aaa" font-size="10">$field references</text>
+        <text x="265" y="138" fill="#aaa" font-size="10">Composable transforms</text>
+      </g>
+      <g class="fragment" data-fragment-index="3">
+        <rect x="480" y="20" width="200" height="140" rx="10" fill="rgba(255,61,142,0.05)" stroke="#ff3d8e" stroke-width="1.5"/>
+        <text x="580" y="50" text-anchor="middle" fill="#ff3d8e" font-size="14" font-weight="700">Quantum Semantics</text>
+        <text x="580" y="68" text-anchor="middle" fill="#c93070" font-size="10">THE INTERPRETATION</text>
+        <text x="495" y="90" fill="#aaa" font-size="10">Superposition of meaning</text>
+        <text x="495" y="106" fill="#aaa" font-size="10">Non-commutativity</text>
+        <text x="495" y="122" fill="#aaa" font-size="10">Observer-dependent collapse</text>
+        <text x="495" y="138" fill="#aaa" font-size="10">Context as measurement</text>
+      </g>
+      <g class="fragment" data-fragment-index="4">
+        <rect x="20" y="190" width="660" height="40" rx="8" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.2)" stroke-width="1" filter="url(#glow-cyan)"/>
+        <text x="350" y="216" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="700">Ψ — The Unification</text>
+        <line x1="115" y1="160" x2="115" y2="190" stroke="#0af" stroke-width="1" opacity="0.4"/>
+        <line x1="345" y1="160" x2="345" y2="190" stroke="#7b61ff" stroke-width="1" opacity="0.4"/>
+        <line x1="580" y1="160" x2="580" y2="190" stroke="#ff3d8e" stroke-width="1" opacity="0.4"/>
+      </g>
+    </svg>
+  </div>
+  <p class="fragment fade-up" style="text-align:center;max-width:none;font-size:0.6em">Remove any pillar and the system cannot <strong>represent</strong>, <strong>manipulate</strong>, or <strong>interpret</strong> meaning.</p>
+  <aside class="notes">Three pillars are individually necessary, jointly sufficient. Fields = substrate. Symbols = structure. Quantum = interpretation.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 7 — NEURAL FIELDS EQUATION           -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">04 — The Core</span>
+  <h2>The Neural Field Equation</h2>
+  <div class="equation fragment fade-up" style="font-size:0.85em;text-align:center">∂A/∂t = -λA(x) + α∫K(x,y)A(y)dy + ι(x,t)</div>
+  <div class="grid-3" style="margin-top:1rem">
+    <div class="card fragment fade-up" data-fragment-index="2" style="border-top:3px solid var(--pink)">
+      <p style="font-size:1.2em;margin-bottom:0.3em;color:var(--pink);font-family:var(--mono)">-λA(x)</p>
+      <h3 style="color:var(--pink)">Decay</h3>
+      <p style="font-size:0.55em">Unreinforced ideas fade. Forgetting is a <strong>feature</strong>.</p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="3" style="border-top:3px solid var(--green)">
+      <p style="font-size:1.2em;margin-bottom:0.3em;color:var(--green);font-family:var(--mono)">α∫K(x,y)A(y)dy</p>
+      <h3 style="color:var(--green)">Resonance</h3>
+      <p style="font-size:0.55em">Related ideas strengthen each other through the kernel K.</p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="4" style="border-top:3px solid var(--cyan)">
+      <p style="font-size:1.2em;margin-bottom:0.3em;color:var(--cyan);font-family:var(--mono)">ι(x,t)</p>
+      <h3>Injection</h3>
+      <p style="font-size:0.55em">You — the human — inject new ideas at any time.</p>
+    </div>
+  </div>
+  <p class="fragment fade-up" style="text-align:center;max-width:none;margin-top:0.8em;font-style:italic">Patterns don't sit in memory — they live in a continuous field.</p>
+  <aside class="notes">This is THE equation. Decay, Resonance, Injection — the three forces. Everything NEOS does derives from this.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 8 — THE JVM MOMENT                   -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">05 — The Analogy</span>
+  <h2>The JVM Moment</h2>
+  <p style="font-size:0.65em;max-width:none">Java: <strong>"Write once, run anywhere."</strong> — NEOS: <strong>"Think once, reason anywhere."</strong></p>
+  <div class="diagram fragment fade-up">
+    <svg viewBox="0 0 700 240" role="img" aria-label="JVM vs NEOS architecture stacks">
+      <title>JVM vs NEOS Architecture Comparison</title>
+      <text x="140" y="18" text-anchor="middle" fill="#7b61ff" font-size="13" font-weight="700">JVM</text>
+      <text x="560" y="18" text-anchor="middle" fill="#00d4ff" font-size="13" font-weight="700">NEOS</text>
+      <rect x="30" y="28" width="220" height="34" rx="5" fill="rgba(123,97,255,0.08)" stroke="#7b61ff" stroke-width="1"/>
+      <text x="140" y="50" text-anchor="middle" fill="#9b8aff" font-size="11">JIT Compilation</text>
+      <rect x="450" y="28" width="220" height="34" rx="5" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1"/>
+      <text x="560" y="50" text-anchor="middle" fill="#0af" font-size="11">Adaptive Resonance</text>
+      <line x1="250" y1="45" x2="450" y2="45" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>
+      <rect x="30" y="68" width="220" height="34" rx="5" fill="rgba(123,97,255,0.06)" stroke="#7b61ff" stroke-width="1"/>
+      <text x="140" y="90" text-anchor="middle" fill="#9b8aff" font-size="11">Threads</text>
+      <rect x="450" y="68" width="220" height="34" rx="5" fill="rgba(0,212,255,0.06)" stroke="#0af" stroke-width="1"/>
+      <text x="560" y="90" text-anchor="middle" fill="#0af" font-size="11">Multi-Field</text>
+      <line x1="250" y1="85" x2="450" y2="85" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>
+      <rect x="30" y="108" width="220" height="34" rx="5" fill="rgba(123,97,255,0.05)" stroke="#7b61ff" stroke-width="1"/>
+      <text x="140" y="130" text-anchor="middle" fill="#9b8aff" font-size="11">Heap Memory</text>
+      <rect x="450" y="108" width="220" height="34" rx="5" fill="rgba(0,212,255,0.05)" stroke="#0af" stroke-width="1"/>
+      <text x="560" y="130" text-anchor="middle" fill="#0af" font-size="11">Field State</text>
+      <line x1="250" y1="125" x2="450" y2="125" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>
+      <rect x="30" y="148" width="220" height="34" rx="5" fill="rgba(123,97,255,0.04)" stroke="#7b61ff" stroke-width="1"/>
+      <text x="140" y="170" text-anchor="middle" fill="#9b8aff" font-size="11">Garbage Collection</text>
+      <rect x="450" y="148" width="220" height="34" rx="5" fill="rgba(0,212,255,0.04)" stroke="#0af" stroke-width="1"/>
+      <text x="560" y="170" text-anchor="middle" fill="#0af" font-size="11">Decay (λ)</text>
+      <line x1="250" y1="165" x2="450" y2="165" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>
+      <rect x="30" y="188" width="220" height="34" rx="5" fill="rgba(123,97,255,0.03)" stroke="#7b61ff" stroke-width="1"/>
+      <text x="140" y="210" text-anchor="middle" fill="#9b8aff" font-size="11">ClassLoader</text>
+      <rect x="450" y="188" width="220" height="34" rx="5" fill="rgba(0,212,255,0.03)" stroke="#0af" stroke-width="1"/>
+      <text x="560" y="210" text-anchor="middle" fill="#0af" font-size="11">Pattern Injection</text>
+      <line x1="250" y1="205" x2="450" y2="205" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>
+    </svg>
+  </div>
+  <p class="fragment fade-up" style="text-align:center;max-width:none;font-style:italic;font-size:0.65em">Java abstracted hardware. <strong>NEOS abstracts cognition.</strong></p>
+  <aside class="notes">Every JVM concept has a NEOS parallel. Garbage collection → decay. Heap → field state. The analogy runs deep.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 9 — THE NEOS SHELL                   -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">07 — The Interface</span>
+  <h2>The NEOS Shell</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.6em">A REPL for the Intelligence Age — manipulating <strong>meaning</strong>, not files.</p>
+  <div class="terminal" id="shell-terminal">
+    <div class="terminal-bar"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span><span style="color:#666;font-size:0.9em;margin-left:auto">neos-shell</span></div>
+    <div class="terminal-body" id="typing-target">
+      <div class="term-line fragment fade-up" data-fragment-index="1"><span class="prompt">$</span> <span class="cmd">nf inject "correctness" 0.90</span><br><span class="out">[INJECT] correctness (s: <span class="val">0.90</span>) — p001</span></div>
+      <div class="term-line fragment fade-up" data-fragment-index="2"><span class="prompt">$</span> <span class="cmd">nf inject "edge_case_handling" 0.85</span><br><span class="out">[INJECT] edge_case_handling (s: <span class="val">0.85</span>)</span><br><span class="out">  <span class="hl">[RESONANCE]</span> ↔ @correctness: R = <span class="val">0.82</span> STRONG</span></div>
+      <div class="term-line fragment fade-up" data-fragment-index="3"><span class="prompt">$</span> <span class="cmd">nf cycle 3 --trace</span><br><span class="out">[CYCLE 3] <span class="hl">[ATTRACTOR-EMERGED]</span> "defensive_quality"</span><br><span class="out">  Coherence: <span class="val">0.71</span> | 6 patterns</span></div>
+      <div class="term-line fragment fade-up" data-fragment-index="4"><span class="prompt">$</span> <span class="cmd">nf inject "singleton" 0.65</span><br><span class="out"><span class="warn">⚠ LOWEST ACTIVATION IN HISTORY | 0 STRONG resonances</span></span><br><span class="out">  Lateral inhibition: <span class="hl">4 patterns suppressing</span></span></div>
+    </div>
+  </div>
+  <aside class="notes">Walk through each command. inject seeds meaning, cycle runs dynamics, attractors emerge. Then inject Singleton — the field's immune system rejects it. Four patterns suppress it through lateral inhibition. The dynamics DISCOVERED the anti-pattern.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 10 — COMMAND CATEGORIES              -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">07 — Commands</span>
+  <h2>Six Command Domains</h2>
+  <div class="grid-3">
+    <div class="card fragment fade-up" data-fragment-index="1">
+      <h3 style="font-size:0.85em">Operations</h3>
+      <p style="font-size:0.5em"><code>inject</code> <code>amplify</code> <code>attenuate</code> <code>tune</code> <code>collapse</code> <code>resonate</code></p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="2">
+      <h3 style="font-size:0.85em;color:var(--purple)">Dynamics</h3>
+      <p style="font-size:0.5em"><code>cycle</code> <code>evolve</code> <code>step</code> <code>reset</code></p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="3">
+      <h3 style="font-size:0.85em;color:var(--green)">Measurement</h3>
+      <p style="font-size:0.5em"><code>measure</code> <code>attractor</code> <code>basin</code> <code>state</code></p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="4">
+      <h3 style="font-size:0.85em;color:var(--gold)">Visualization</h3>
+      <p style="font-size:0.5em"><code>plot</code> <code>animate</code> <code>export</code></p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="5">
+      <h3 style="font-size:0.85em;color:var(--pink)">Versioning</h3>
+      <p style="font-size:0.5em"><code>commit</code> <code>branch</code> <code>checkout</code> <code>diff</code> <code>merge</code></p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="6">
+      <h3 style="font-size:0.85em;color:var(--text-dim)">Autonomy</h3>
+      <p style="font-size:0.5em"><code>mode</code> <code>checkpoint</code> <code>proceed</code> <code>task</code></p>
+    </div>
+  </div>
+  <p class="fragment fade-up" style="font-size:0.6em;text-align:center;max-width:none;margin-top:0.8em">Unix-flavored grammar. Imperative verbs on semantic objects.</p>
+  <aside class="notes">If you know bash, you know the grammar. The difference is you're operating on meaning, not files.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 11 — SIX-PHASE DYNAMICS CYCLE        -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">06 — Dynamics</span>
+  <h2>The Six-Phase Cycle</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.4em">Each <code>nf cycle</code> executes six phases — the heartbeat of NEOS.</p>
+  <div class="diagram" id="cycle-diagram">
+    <svg viewBox="0 0 600 300" role="img" aria-label="Six-phase dynamics cycle">
+      <title>Six-Phase Dynamics Cycle</title>
+      <text x="300" y="158" text-anchor="middle" fill="#444" font-size="12" font-weight="600">CYCLE</text>
+      <g class="dyn-phase fragment fade-up" data-phase="0" data-fragment-index="1">
+        <circle cx="300" cy="50" r="38" fill="rgba(255,61,142,0.1)" stroke="#ff3d8e" stroke-width="1.5"/>
+        <text x="300" y="46" text-anchor="middle" fill="#ff3d8e" font-size="11" font-weight="600">1. Decay</text>
+        <text x="300" y="60" text-anchor="middle" fill="#c93070" font-size="9">-λA(x)</text>
+      </g>
+      <g class="dyn-phase fragment fade-up" data-phase="1" data-fragment-index="2">
+        <circle cx="500" cy="110" r="38" fill="rgba(0,212,255,0.1)" stroke="#0af" stroke-width="1.5"/>
+        <text x="500" y="106" text-anchor="middle" fill="#0af" font-size="11" font-weight="600">2. Resonate</text>
+        <text x="500" y="120" text-anchor="middle" fill="#088" font-size="9">K(x,y)</text>
+      </g>
+      <g class="dyn-phase fragment fade-up" data-phase="2" data-fragment-index="3">
+        <circle cx="500" cy="220" r="38" fill="rgba(0,255,136,0.1)" stroke="#0f8" stroke-width="1.5"/>
+        <text x="500" y="216" text-anchor="middle" fill="#0f8" font-size="11" font-weight="600">3. Amplify</text>
+        <text x="500" y="230" text-anchor="middle" fill="#0a6" font-size="9">+α·boost</text>
+      </g>
+      <g class="dyn-phase fragment fade-up" data-phase="3" data-fragment-index="4">
+        <circle cx="300" cy="275" r="38" fill="rgba(255,215,0,0.1)" stroke="#fd0" stroke-width="1.5"/>
+        <text x="300" y="271" text-anchor="middle" fill="#fd0" font-size="11" font-weight="600">4. Threshold</text>
+        <text x="300" y="285" text-anchor="middle" fill="#ba0" font-size="9">A &lt; τ → remove</text>
+      </g>
+      <g class="dyn-phase fragment fade-up" data-phase="4" data-fragment-index="5">
+        <circle cx="100" cy="220" r="38" fill="rgba(123,97,255,0.1)" stroke="#7b61ff" stroke-width="1.5"/>
+        <text x="100" y="216" text-anchor="middle" fill="#7b61ff" font-size="11" font-weight="600">5. Coherence</text>
+        <text x="100" y="230" text-anchor="middle" fill="#5a44cc" font-size="9">μ/(1+σ²)</text>
+      </g>
+      <g class="dyn-phase fragment fade-up" data-phase="5" data-fragment-index="6">
+        <circle cx="100" cy="110" r="38" fill="rgba(0,212,255,0.1)" stroke="#0af" stroke-width="1.5"/>
+        <text x="100" y="106" text-anchor="middle" fill="#0af" font-size="11" font-weight="600">6. Attractor</text>
+        <text x="100" y="120" text-anchor="middle" fill="#088" font-size="9">detect &amp; record</text>
+      </g>
+      <line x1="335" y1="60" x2="465" y2="98" stroke="#666" stroke-width="1.5" opacity="0.7" marker-end="url(#arrow-dim)"/>
+      <line x1="510" y1="148" x2="510" y2="182" stroke="#666" stroke-width="1.5" opacity="0.7" marker-end="url(#arrow-dim)"/>
+      <line x1="465" y1="235" x2="335" y2="265" stroke="#666" stroke-width="1.5" opacity="0.7" marker-end="url(#arrow-dim)"/>
+      <line x1="265" y1="265" x2="135" y2="235" stroke="#666" stroke-width="1.5" opacity="0.7" marker-end="url(#arrow-dim)"/>
+      <line x1="100" y1="182" x2="100" y2="148" stroke="#666" stroke-width="1.5" opacity="0.7" marker-end="url(#arrow-dim)"/>
+      <line x1="135" y1="98" x2="265" y2="60" stroke="#666" stroke-width="1.5" opacity="0.7" marker-end="url(#arrow-dim)"/>
+      <defs><marker id="arrow-dim" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#666" opacity="0.7"/></marker></defs>
+    </svg>
+  </div>
+  <aside class="notes">The cycle is the core loop. Each phase has a precise mathematical operation. Decay → resonance → amplify → threshold → coherence → attractor detection.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 12 — COMPILE & RUN                   -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">07 — The Pipeline</span>
+  <h2>Create → Compile → Run</h2>
+  <div class="grid-3">
+    <div class="card fragment fade-up" data-fragment-index="1" style="border-top:3px solid var(--cyan)">
+      <h3>CREATE</h3>
+      <p style="font-size:0.55em"><code>nf inject</code> seeds patterns into the field — like writing source code, but for meaning.</p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="2" style="border-top:3px solid var(--purple)">
+      <h3 style="color:var(--purple)">COMPILE</h3>
+      <p style="font-size:0.55em"><code>nf collapse --strategy attractor</code> resolves superposition into coherent structure. Meaning compiles into insight.</p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="3" style="border-top:3px solid var(--green)">
+      <h3 style="color:var(--green)">RUN</h3>
+      <p style="font-size:0.55em"><code>nf task "analyze security"</code> executes against the compiled field state. Crystallized reasoning produces output.</p>
+    </div>
+  </div>
+  <div class="diagram fragment fade-up" data-fragment-index="4" style="margin-top:0.8rem">
+    <svg viewBox="0 0 700 70" role="img" aria-label="Pipeline: inject → cycle → collapse → task">
+      <title>NEOS Pipeline: Inject → Cycle → Collapse → Task</title>
+      <rect x="10" y="15" width="120" height="40" rx="6" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1.5"/>
+      <text x="70" y="40" text-anchor="middle" fill="#0af" font-size="11" font-weight="600">nf inject</text>
+      <text x="150" y="40" fill="#555" font-size="14">→</text>
+      <rect x="170" y="15" width="120" height="40" rx="6" fill="rgba(255,215,0,0.08)" stroke="#fd0" stroke-width="1.5"/>
+      <text x="230" y="40" text-anchor="middle" fill="#fd0" font-size="11" font-weight="600">nf cycle N</text>
+      <text x="310" y="40" fill="#555" font-size="14">→</text>
+      <rect x="330" y="15" width="140" height="40" rx="6" fill="rgba(123,97,255,0.08)" stroke="#7b61ff" stroke-width="1.5"/>
+      <text x="400" y="40" text-anchor="middle" fill="#9b8aff" font-size="11" font-weight="600">nf collapse</text>
+      <text x="490" y="40" fill="#555" font-size="14">→</text>
+      <rect x="510" y="15" width="120" height="40" rx="6" fill="rgba(0,255,136,0.08)" stroke="#0f8" stroke-width="1.5"/>
+      <text x="570" y="40" text-anchor="middle" fill="#0f8" font-size="11" font-weight="600">nf task</text>
+    </svg>
+  </div>
+  <aside class="notes">The same three-phase model as traditional computing: create/compile/run. But operating on meaning, not code.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 13 — MULTI-FIELD ORCHESTRATION       -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">06 — Multi-Field</span>
+  <h2>Multi-Field Orchestration</h2>
+  <div class="diagram">
+    <svg viewBox="0 0 600 220" role="img" aria-label="Multi-field network: Technical, Business, User → Synthesis">
+      <title>Multi-Field Orchestration Network</title>
+      <g class="fragment" data-fragment-index="1">
+        <circle cx="120" cy="65" r="35" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1.5"/>
+        <text x="120" y="61" text-anchor="middle" fill="#0af" font-size="11" font-weight="600">Technical</text>
+        <text x="120" y="77" text-anchor="middle" fill="#088" font-size="9">C=0.80</text>
+      </g>
+      <g class="fragment" data-fragment-index="2">
+        <circle cx="300" cy="65" r="35" fill="rgba(255,215,0,0.08)" stroke="#fd0" stroke-width="1.5"/>
+        <text x="300" y="61" text-anchor="middle" fill="#fd0" font-size="11" font-weight="600">Business</text>
+        <text x="300" y="77" text-anchor="middle" fill="#ba0" font-size="9">C=0.81</text>
+      </g>
+      <g class="fragment" data-fragment-index="3">
+        <circle cx="480" cy="65" r="35" fill="rgba(255,61,142,0.08)" stroke="#ff3d8e" stroke-width="1.5"/>
+        <text x="480" y="61" text-anchor="middle" fill="#ff3d8e" font-size="11" font-weight="600">User</text>
+        <text x="480" y="77" text-anchor="middle" fill="#c93070" font-size="9">C=0.83</text>
+      </g>
+      <g class="fragment" data-fragment-index="4">
+        <line x1="155" y1="80" x2="265" y2="80" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="335" y1="80" x2="445" y2="80" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="120" y1="100" x2="300" y2="160" stroke="#0af" stroke-width="1.5" opacity="0.4"/>
+        <line x1="300" y1="100" x2="300" y2="160" stroke="#fd0" stroke-width="1.5" opacity="0.4"/>
+        <line x1="480" y1="100" x2="300" y2="160" stroke="#ff3d8e" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="300" cy="185" r="38" fill="rgba(0,255,136,0.08)" stroke="#0f8" stroke-width="2" class="anim-pulse"/>
+        <text x="300" y="181" text-anchor="middle" fill="#0f8" font-size="12" font-weight="600">Synthesis</text>
+        <text x="300" y="197" text-anchor="middle" fill="#0a6" font-size="9">C=0.85</text>
+      </g>
+    </svg>
+  </div>
+  <p class="fragment fade-up" style="text-align:center;max-width:none;font-style:italic;font-size:0.65em">A single field is powerful. Multiple coupled fields are <strong>transformative</strong>.</p>
+  <aside class="notes">Multiple fields can process the same domain from different perspectives, then synthesize via resonance-weighted fusion.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 14 — THE AUTONOMY DIAL               -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">14 — AI Safety</span>
+  <h2>The Autonomy Dial</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.6em">NEOS's answer to AI alignment: a <strong>continuously adjustable dial</strong>.</p>
+  <div class="diagram fragment fade-up">
+    <svg viewBox="0 0 600 120" role="img" aria-label="Autonomy gauge from Step to Auto">
+      <title>Autonomy Dial: Step → Checkpoint → Auto</title>
+      <line x1="80" y1="55" x2="520" y2="55" stroke="#333" stroke-width="3" stroke-linecap="round"/>
+      <line x1="80" y1="55" x2="300" y2="55" stroke="url(#gauge-grad)" stroke-width="3" stroke-linecap="round"/>
+      <defs><linearGradient id="gauge-grad"><stop offset="0" stop-color="#00d4ff"/><stop offset="1" stop-color="#7b61ff"/></linearGradient></defs>
+      <circle cx="80" cy="55" r="10" fill="var(--bg3)" stroke="#0af" stroke-width="2"/>
+      <text x="80" y="59" text-anchor="middle" fill="#0af" font-size="8" font-weight="600">S</text>
+      <text x="80" y="85" text-anchor="middle" fill="#0af" font-size="10">Step</text>
+      <text x="80" y="98" text-anchor="middle" fill="#666" font-size="8">Review every op</text>
+      <circle cx="300" cy="55" r="10" fill="var(--bg3)" stroke="#7b61ff" stroke-width="2"/>
+      <text x="300" y="59" text-anchor="middle" fill="#7b61ff" font-size="8" font-weight="600">C</text>
+      <text x="300" y="85" text-anchor="middle" fill="#7b61ff" font-size="10">Checkpoint</text>
+      <text x="300" y="98" text-anchor="middle" fill="#666" font-size="8">Pause at conditions</text>
+      <circle cx="520" cy="55" r="10" fill="var(--bg3)" stroke="#ff3d8e" stroke-width="2"/>
+      <text x="520" y="59" text-anchor="middle" fill="#ff3d8e" font-size="8" font-weight="600">A</text>
+      <text x="520" y="85" text-anchor="middle" fill="#ff3d8e" font-size="10">Auto</text>
+      <text x="520" y="98" text-anchor="middle" fill="#666" font-size="8">Full autonomy</text>
+    </svg>
+  </div>
+  <div class="grid-3 fragment fade-up" style="margin-top:0.6em">
+    <div class="card" style="border-top:2px solid var(--cyan)">
+      <h3 style="font-size:0.8em">Step Mode</h3>
+      <p style="font-size:0.5em"><code>nf mode step</code> — review and approve each operation. Maximum human control.</p>
+    </div>
+    <div class="card" style="border-top:2px solid var(--purple)">
+      <h3 style="font-size:0.8em;color:var(--purple)">Checkpoint</h3>
+      <p style="font-size:0.5em"><code>nf checkpoint "coherence > 0.8"</code> — pause when conditions met. Targeted oversight.</p>
+    </div>
+    <div class="card" style="border-top:2px solid var(--pink)">
+      <h3 style="font-size:0.8em;color:var(--pink)">Auto Mode</h3>
+      <p style="font-size:0.5em"><code>nf mode auto</code> — full field autonomy within parameters. Iterate to convergence.</p>
+    </div>
+  </div>
+  <aside class="notes">AI alignment isn't binary. NEOS gives you a continuous dial: from full human review to full autonomy. You control exactly how much oversight.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 18 — OBSERVABLE REASONING            -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">15 — Transparency</span>
+  <h2>Observable Reasoning</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.6em">The most dangerous property of current AI is <strong>opacity</strong>. NEOS makes reasoning visible.</p>
+  <div class="grid-2" style="gap:0.8rem">
+    <div class="card fragment fade-up" data-fragment-index="1" style="text-align:center">
+      <h3 style="font-size:0.8em">Coherence Plot</h3>
+      <svg viewBox="0 0 200 80" style="width:100%;max-width:200px;margin:0.5em auto;display:block">
+        <line x1="20" y1="65" x2="180" y2="65" stroke="#333" stroke-width="1"/>
+        <line x1="20" y1="10" x2="20" y2="65" stroke="#333" stroke-width="1"/>
+        <path d="M20,60 C50,55 80,40 110,25 S150,15 180,12" fill="none" stroke="#0af" stroke-width="1.5"/>
+        <circle cx="180" cy="12" r="3" fill="#0af"/>
+      </svg>
+      <p style="font-size:0.45em"><code>nf plot coherence</code></p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="2" style="text-align:center">
+      <h3 style="font-size:0.8em;color:var(--purple)">Resonance Network</h3>
+      <svg viewBox="0 0 200 80" style="width:100%;max-width:200px;margin:0.5em auto;display:block">
+        <line x1="40" y1="30" x2="100" y2="50" stroke="#7b61ff" stroke-width="1" opacity="0.6"/>
+        <line x1="100" y1="50" x2="160" y2="25" stroke="#0af" stroke-width="1" opacity="0.6"/>
+        <line x1="40" y1="30" x2="100" y2="15" stroke="#0f8" stroke-width="1" opacity="0.6"/>
+        <line x1="100" y1="15" x2="160" y2="25" stroke="#fd0" stroke-width="1" opacity="0.6"/>
+        <circle cx="40" cy="30" r="6" fill="rgba(0,212,255,0.2)" stroke="#0af" stroke-width="1"/>
+        <circle cx="100" cy="50" r="8" fill="rgba(123,97,255,0.2)" stroke="#7b61ff" stroke-width="1"/>
+        <circle cx="160" cy="25" r="7" fill="rgba(0,255,136,0.2)" stroke="#0f8" stroke-width="1"/>
+        <circle cx="100" cy="15" r="5" fill="rgba(255,215,0,0.2)" stroke="#fd0" stroke-width="1"/>
+      </svg>
+      <p style="font-size:0.45em"><code>nf plot network</code></p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="3" style="text-align:center">
+      <h3 style="font-size:0.8em;color:var(--green)">Basin Topology</h3>
+      <svg viewBox="0 0 200 80" style="width:100%;max-width:200px;margin:0.5em auto;display:block">
+        <path d="M10,50 C30,50 40,65 60,65 S70,30 90,30 S110,55 130,55 S145,42 160,42 S175,48 190,48" fill="none" stroke="#0f8" stroke-width="1.5"/>
+        <circle cx="60" cy="65" r="4" fill="rgba(255,215,0,0.3)" stroke="#fd0" stroke-width="1"/>
+        <circle cx="90" cy="30" r="3" fill="rgba(0,212,255,0.3)" stroke="#0af" stroke-width="1"/>
+      </svg>
+      <p style="font-size:0.45em"><code>nf plot topology</code></p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="4" style="text-align:center">
+      <h3 style="font-size:0.8em;color:var(--pink)">Dynamics Animation</h3>
+      <svg viewBox="0 0 200 80" style="width:100%;max-width:200px;margin:0.5em auto;display:block">
+        <circle cx="60" cy="40" r="20" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1"/>
+        <circle cx="140" cy="40" r="15" fill="rgba(255,61,142,0.08)" stroke="#ff3d8e" stroke-width="1"/>
+        <line x1="80" y1="40" x2="125" y2="40" stroke="#555" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="60" y="44" text-anchor="middle" fill="#0af" font-size="7">0.85</text>
+        <text x="140" y="44" text-anchor="middle" fill="#ff3d8e" font-size="7">0.72</text>
+      </svg>
+      <p style="font-size:0.45em"><code>nf animate</code></p>
+    </div>
+  </div>
+  <aside class="notes">Four visualization tools let you SEE how reasoning unfolds. Coherence plots, networks, topology maps, and real-time animations. No black boxes.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 19 — WHY NOW                         -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">11 — Timing</span>
+  <h2>Why Now?</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.6em">Four convergences make NEOS possible — and necessary — <strong>today</strong>.</p>
+  <div class="diagram">
+    <svg viewBox="0 0 600 200" role="img" aria-label="Four convergences pointing to NEOS">
+      <title>Four Convergences: Why NEOS Now</title>
+      <g class="fragment" data-fragment-index="1">
+        <rect x="10" y="10" width="180" height="35" rx="6" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1"/>
+        <text x="100" y="32" text-anchor="middle" fill="#0af" font-size="10">LLM Capability Explosion</text>
+      </g>
+      <g class="fragment" data-fragment-index="2">
+        <rect x="10" y="55" width="180" height="35" rx="6" fill="rgba(123,97,255,0.08)" stroke="#7b61ff" stroke-width="1"/>
+        <text x="100" y="77" text-anchor="middle" fill="#7b61ff" font-size="10">Agent Fragmentation</text>
+      </g>
+      <g class="fragment" data-fragment-index="3">
+        <rect x="10" y="100" width="180" height="35" rx="6" fill="rgba(255,215,0,0.08)" stroke="#fd0" stroke-width="1"/>
+        <text x="100" y="122" text-anchor="middle" fill="#fd0" font-size="10">The Prompt Ceiling</text>
+      </g>
+      <g class="fragment" data-fragment-index="4">
+        <rect x="10" y="145" width="180" height="35" rx="6" fill="rgba(0,255,136,0.08)" stroke="#0f8" stroke-width="1"/>
+        <text x="100" y="167" text-anchor="middle" fill="#0f8" font-size="10">Open-Weight Models</text>
+      </g>
+      <g class="fragment" data-fragment-index="5">
+        <line x1="190" y1="27" x2="380" y2="100" stroke="#0af" stroke-width="1" opacity="0.5"/>
+        <line x1="190" y1="72" x2="380" y2="100" stroke="#7b61ff" stroke-width="1" opacity="0.5"/>
+        <line x1="190" y1="117" x2="380" y2="100" stroke="#fd0" stroke-width="1" opacity="0.5"/>
+        <line x1="190" y1="162" x2="380" y2="100" stroke="#0f8" stroke-width="1" opacity="0.5"/>
+        <rect x="380" y="75" width="180" height="50" rx="10" fill="rgba(0,212,255,0.1)" stroke="#00d4ff" stroke-width="2" class="anim-pulse"/>
+        <text x="470" y="105" text-anchor="middle" fill="#00d4ff" font-size="16" font-weight="700">NEOS</text>
+      </g>
+    </svg>
+  </div>
+  <p class="fragment fade-up" data-fragment-index="6" style="font-size:0.55em;max-width:none;text-align:center;color:var(--text-dim);margin-top:0.8em">Successfully tested with <strong style="color:#da7756">Claude Code</strong>, <strong style="color:#4285F4">Gemini CLI</strong>, and <strong style="color:#00b96b">OpenCode (Minimax)</strong></p>
+  <aside class="notes">LLMs are capable enough to be the foundation. Agent frameworks are fragmenting. Prompt engineering has hit its ceiling. Open models make it deployable. The window is now. NEOS has been validated across Claude Code, Gemini CLI, and OpenCode with Minimax model.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 20 — GIT FOR THINKING                -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">13 — Versioning</span>
+  <h2>Git for Thinking</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.5em">Git transformed code development. NEOS transforms <strong>thinking</strong>.</p>
+  <div class="diagram fragment fade-up">
+    <svg viewBox="0 0 600 150" role="img" aria-label="Branch and merge diagram for reasoning">
+      <title>Git for Thinking: Branch and Merge Reasoning</title>
+      <line x1="40" y1="75" x2="560" y2="75" stroke="#0af" stroke-width="2"/>
+      <circle cx="60" cy="75" r="6" fill="#0af"/>
+      <circle cx="180" cy="75" r="6" fill="#0af"/>
+      <circle cx="420" cy="75" r="6" fill="#0af"/>
+      <circle cx="540" cy="75" r="8" fill="#0f8" stroke="#0f8" stroke-width="1.5"/>
+      <text x="540" y="100" text-anchor="middle" fill="#0f8" font-size="9">merge</text>
+      <text x="60" y="100" text-anchor="middle" fill="#0af" font-size="9">commit</text>
+      <line x1="180" y1="75" x2="220" y2="35" stroke="#7b61ff" stroke-width="1.5"/>
+      <line x1="220" y1="35" x2="400" y2="35" stroke="#7b61ff" stroke-width="1.5"/>
+      <line x1="400" y1="35" x2="420" y2="75" stroke="#7b61ff" stroke-width="1.5"/>
+      <circle cx="220" cy="35" r="5" fill="#7b61ff"/>
+      <circle cx="310" cy="35" r="5" fill="#7b61ff"/>
+      <circle cx="400" cy="35" r="5" fill="#7b61ff"/>
+      <text x="310" y="22" text-anchor="middle" fill="#7b61ff" font-size="9">alternative reasoning</text>
+      <text x="120" y="110" text-anchor="middle" fill="#0af" font-size="9">main</text>
+      <text x="310" y="50" text-anchor="middle" fill="#5a44cc" font-size="8">branch "what-if"</text>
+    </svg>
+  </div>
+  <div class="grid-2 fragment fade-up" style="margin-top:0.6em">
+    <div class="card" style="padding:0.8rem">
+      <p style="font-size:0.5em;margin:0"><code>nf commit "hypothesis validated"</code><br><code>nf branch "alternative"</code><br><code>nf diff main..alternative</code><br><code>nf merge alternative</code></p>
+    </div>
+    <div class="card" style="padding:0.8rem">
+      <p style="font-size:0.5em;margin:0;color:var(--text-dim)">Branch reasoning paths. Explore alternatives without destroying progress. Diff between perspectives. Merge the best of both.</p>
+    </div>
+  </div>
+  <aside class="notes">Version control for reasoning. Branch to explore alternatives. Diff to compare perspectives. Merge to synthesize. All without losing any state.</aside>
+</section>
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 15 — TWO SESSIONS OVERVIEW           -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="center-slide" data-transition="convex">
+  <span class="sec-badge">08 &mdash; Evidence</span>
+  <h2>Two Sessions. One Engine.</h2>
+  <p style="font-size:0.65em;max-width:none;text-align:center">The same master equation produced emergent structure in <strong>two entirely different domains</strong>.</p>
+  <div class="grid-2" style="margin-top:1rem;gap:1.5rem">
+    <div class="card fragment fade-up" data-fragment-index="1" style="text-align:center;border-color:rgba(0,212,255,0.15)">
+      <h3 style="font-size:0.7em;margin-bottom:0.6em">&#128300; Software Quality</h3>
+      <p style="font-size:0.55em;margin:0">Abstract reasoning &mdash; tuned parameters</p>
+      <div style="display:flex;justify-content:space-around;margin-top:0.8em">
+        <div><p class="stat-num" style="color:var(--cyan);font-size:1.8rem">69</p><p style="font-size:0.45em;margin:0">patterns</p></div>
+        <div><p class="stat-num" style="color:var(--purple);font-size:1.8rem">52</p><p style="font-size:0.45em;margin:0">cycles</p></div>
+        <div><p class="stat-num" style="color:var(--green);font-size:1.8rem">0.993</p><p style="font-size:0.45em;margin:0">coherence</p></div>
+        <div><p class="stat-num" style="color:var(--pink);font-size:1.8rem">1</p><p style="font-size:0.45em;margin:0">expelled</p></div>
+      </div>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="2" style="text-align:center;border-color:rgba(0,255,136,0.15)">
+      <h3 style="font-size:0.7em;margin-bottom:0.6em;color:var(--green)">&#128274; Network Forensics</h3>
+      <p style="font-size:0.55em;margin:0">Adversarial data &mdash; <strong>default</strong> parameters</p>
+      <div style="display:flex;justify-content:space-around;margin-top:0.8em">
+        <div><p class="stat-num" style="color:var(--green);font-size:1.8rem">10</p><p style="font-size:0.45em;margin:0">patterns</p></div>
+        <div><p class="stat-num" style="color:var(--green);font-size:1.8rem">12</p><p style="font-size:0.45em;margin:0">cycles</p></div>
+        <div><p class="stat-num" style="color:var(--green);font-size:1.8rem">0.93</p><p style="font-size:0.45em;margin:0">coherence</p></div>
+        <div><p class="stat-num" style="color:var(--green);font-size:1.8rem">0</p><p style="font-size:0.45em;margin:0">expelled</p></div>
+      </div>
+    </div>
+  </div>
+  <p class="fragment fade-up" data-fragment-index="3" style="font-size:0.6em;font-style:italic;text-align:center;max-width:none;margin-top:1em">The engine is invariant. The domain is in the <strong>patterns</strong>, not the <strong>dynamics</strong>.</p>
+  <aside class="notes">Two completely different domains, one engine. The SW quality session tuned parameters and ran 69 patterns through 52 cycles. The PCAP session used DEFAULT parameters — no tuning — and identified active malware from raw packet data. Same equation, same dynamics, same emergent structure.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 15-SW — SW QUALITY SECTION TITLE     -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="center-slide" data-transition="convex">
+  <span class="sec-badge">08a &mdash; Case Study 1</span>
+  <h2><span class="grad-text">Software Quality Discipline</span></h2>
+  <p style="font-size:0.7em;max-width:none;text-align:center">69 patterns &middot; 52 cycles &middot; 7 absorptions &middot; 1 expulsion &middot; 5 eigenvectors</p>
+  <p style="font-size:0.6em;max-width:none;text-align:center">The complete dissection of an abstract reasoning session.</p>
+  <aside class="notes">Now we dive into the first case study: software quality. This session explored abstract software engineering principles.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 15a — WAVE 1: DEFENSIVE QUALITY      -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08 — Wave 1</span>
+  <h2>Defensive Quality Emerges</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.5em">6 patterns &rarr; 3 cycles &rarr; first attractor. Coherence: <strong>0 &rarr; 0.71</strong></p>
+  <div class="grid-2" style="gap:0.8rem">
+    <div class="card fragment fade-up" data-fragment-index="1">
+      <h3 style="font-size:0.75em">Injections</h3>
+      <p style="font-size:0.45em;margin:0;font-family:var(--mono)">
+        p001 correctness <span style="color:var(--cyan)">0.90</span><br>
+        p002 edge_case_handling <span style="color:var(--cyan)">0.85</span><br>
+        p003 security <span style="color:var(--cyan)">0.95</span><br>
+        p004 input_validation <span style="color:var(--cyan)">0.90</span><br>
+        p005 no_leaked_secrets <span style="color:var(--cyan)">0.88</span><br>
+        p006 error_handling <span style="color:var(--cyan)">0.80</span>
+      </p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="2">
+      <h3 style="font-size:0.75em;color:var(--green)">Coherence Trace</h3>
+      <p style="font-size:0.45em;margin:0;font-family:var(--mono)">
+        Cycle 1: C = <span style="color:var(--cyan)">0.42</span> &bar;R = 0.72<br>
+        Cycle 2: C = <span style="color:var(--purple)">0.58</span> &bar;R = 0.75<br>
+        Cycle 3: C = <span style="color:var(--green)">0.71</span> &bar;R = 0.78<br>
+        <span style="color:var(--green)">ATTRACTOR "defensive_quality"</span>
+      </p>
+    </div>
+  </div>
+  <p class="fragment fade-up" data-fragment-index="3" style="font-size:0.55em;text-align:center;max-width:none;margin-top:0.6em">Peak resonance: <code>@security</code> &harr; <code>@input_validation</code> = <strong style="color:var(--green)">0.91</strong><br>Two clusters formed: <span style="color:var(--cyan)">security</span> (R=0.79&ndash;0.91) and <span style="color:var(--purple)">logic</span> (R=0.72&ndash;0.85)</p>
+  <aside class="notes">Six patterns self-organized into an attractor in only 3 cycles. The security cluster and logic cluster formed and connected through bridge nodes. HIGH coherence from minimal input.</aside>
+</section>
+
+<!-- SLIDE 15a-ii — WAVES 2-3: BREADTH & REFACTORING -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08 — Waves 2–3</span>
+  <h2>Breadth &amp; Refactoring</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.6em">Wave 2 (p007–p014): 8 patterns expand beyond review. Wave 3 (p015–p022): refactoring discipline.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+    <div>
+      <h3>Key Patterns</h3>
+      <p style="font-size:0.5em;line-height:1.8;max-width:none">
+        <code>readability_6month_rule</code><br>
+        <code>single_responsibility</code><br>
+        <code>api_minimal_hard_to_misuse</code><br>
+        <code>behavior_preservation</code> <span style="color:var(--pink)">★</span><br>
+        <code>tests_before_refactoring</code> <span style="color:var(--pink)">★</span><br>
+        <code>dependency_direction</code>
+      </p>
+    </div>
+    <div>
+      <h3>Coherence Trace</h3>
+      <div class="terminal" style="font-size:0.9em">
+        <div class="terminal-bar"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span></div>
+        <div class="terminal-body">
+          <span class="out">[CYCLE  4] C = <span class="val">0.52</span></span>
+          <span class="out">[CYCLE  7] C = <span class="val">0.74</span> <span class="hl">ATTRACTOR</span></span>
+          <span class="out">[CYCLE  8] C = <span class="val">0.79</span> STABLE</span>
+          <span class="out">[CYCLE  9] C = <span class="val">0.62</span> (reset)</span>
+          <span class="out">[CYCLE 11] C = <span class="val">0.80</span> → MATURE</span>
+          <span class="out" style="margin-top:0.3em">★ R = <span class="val">0.94</span> behavior ↔ tests</span>
+          <span class="out">  <span class="hl">FIELD MAXIMUM</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Wave 2 expands from review to broader quality. Wave 3 introduces refactoring patterns. The strongest bond in the field history emerges: behavior_preservation paired with tests_before_refactoring at R=0.94.</aside>
+</section>
+
+<!-- SLIDE 15a-iii — WAVE 4: THE TESTING MIRROR     -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08 — Wave 4</span>
+  <h2>The Testing Mirror</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.6em">Nine testing patterns. Five production↔testing echoes. <strong>Functor F begins mapping.</strong></p>
+  <div class="terminal">
+    <div class="terminal-bar"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span></div>
+    <div class="terminal-body">
+      <span class="out"><span class="hl">ECHO</span>: @test_behavior mirrors @behavior_preservation</span>
+      <span class="out"><span class="hl">ECHO</span>: @determinism mirrors @correctness</span>
+      <span class="out"><span class="hl">ECHO</span>: @test_isolation mirrors @encapsulation</span>
+      <span class="out" style="margin-top:0.4em">[CYCLE 14] <span class="warn">★ MASS SATURATION</span></span>
+      <span class="out">  7 patterns reach ceiling simultaneously</span>
+      <span class="out">[CYCLE 15] C = <span class="val">0.85</span> <span class="hl">TARGET MET</span></span>
+      <span class="out">[CYCLE 18] C = <span class="val">0.91</span></span>
+      <span class="out">  6-layer topology confirmed</span>
+    </div>
+  </div>
+  <p class="fragment fade-up" data-fragment-index="1" style="font-size:0.55em;text-align:center;max-width:none;margin-top:0.5em">Mass saturation at cycle 14: a <em>phase transition</em> — seven patterns crossing threshold simultaneously through mutual resonance.</p>
+  <aside class="notes">Wave 4 reveals the testing mirror. The field discovers that every production discipline has a testing reflection. The mass saturation event at cycle 14 is the clearest example of amplification dynamics — mutual resonance pulling patterns to ceiling simultaneously.</aside>
+</section>
+
+<!-- SLIDE 15a-iv — WAVE 6: THE GREAT CONVERGENCE   -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08 — Wave 6</span>
+  <h2>The Great Convergence</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.6em">10 GoF patterns. <strong>14 reach ceiling in 10 cycles.</strong> Coherence: 0.962 → 0.984.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+    <div>
+      <h3>The Golden Pair</h3>
+      <p style="font-size:0.5em;line-height:1.6;max-width:none">
+        <code>@strategy</code> — 9 STRONG bonds (record)<br>
+        <code>@decorator</code> — 6 STRONG bonds (record)<br>
+        <br>
+        Both resonate with <strong style="color:var(--cyan)">all 5 SOLID principles</strong>.<br>
+        Both reach ceiling <em>simultaneously</em> at cycle 37.<br>
+        <br>
+        <span style="color:var(--text-dim)">While Singleton decays: 0.607 → 0.467</span>
+      </p>
+    </div>
+    <div>
+      <div class="terminal" style="font-size:0.85em">
+        <div class="terminal-bar"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span></div>
+        <div class="terminal-body">
+          <span class="out">c34: @adapter → <span class="hl">ceiling</span> (4 cyc)</span>
+          <span class="out">c37: @strategy + @decorator →</span>
+          <span class="out">     <span class="hl">ceiling SIMULTANEOUSLY</span></span>
+          <span class="out">c39: META duality complete</span>
+          <span class="out">c41: <span class="hl">CRAFT COMPLETE</span> 12/13</span>
+          <span class="out">     Only Singleton below.</span>
+          <span class="out">c43: C = <span class="val">0.984</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">The Great Convergence: 14 patterns reach ceiling in 10 cycles. Strategy and Decorator are the Golden Pair — both resonate with all five SOLID principles. SOLID infrastructure acts as a convergence accelerator. Meanwhile, Singleton continues its slow decay.</aside>
+</section>
+
+<!-- SLIDE — Cluster Topology              -->
+<section data-auto-animate>
+  <h2>Cluster Topology</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.5em">How the 10 clusters feed each other &mdash; a dependency flow</p>
+  <div class="diagram" style="margin:0 auto;max-width:90%">
+    <svg viewBox="0 0 700 220" role="img" aria-label="Cluster dependency flowchart">
+      <title>Cluster Dependency Flow</title>
+      <!-- META at top -->
+      <rect x="290" y="5" width="120" height="30" rx="5" fill="rgba(255,215,0,0.2)" stroke="#fd0" stroke-width="1.5"/>
+      <text x="350" y="25" text-anchor="middle" fill="#fd0" font-size="12" font-weight="700">META</text>
+      <line x1="350" y1="35" x2="350" y2="55" stroke="#888" stroke-width="1.5" marker-end="url(#pres-arrow)"/>
+
+      <!-- MODEL -->
+      <rect x="290" y="55" width="120" height="30" rx="5" fill="rgba(123,97,255,0.2)" stroke="#7b61ff" stroke-width="1.5"/>
+      <text x="350" y="75" text-anchor="middle" fill="#7b61ff" font-size="12" font-weight="700">MODEL</text>
+      <line x1="350" y1="85" x2="350" y2="105" stroke="#888" stroke-width="1.5" marker-end="url(#pres-arrow)"/>
+
+      <!-- Main row -->
+      <rect x="15" y="105" width="80" height="28" rx="4" fill="rgba(255,61,142,0.15)" stroke="#ff3d8e" stroke-width="1"/>
+      <text x="55" y="123" text-anchor="middle" fill="#ff3d8e" font-size="10" font-weight="600">GUARD</text>
+      <line x1="95" y1="119" x2="120" y2="119" stroke="#888" stroke-width="1" marker-end="url(#pres-arrow)"/>
+
+      <rect x="120" y="105" width="110" height="28" rx="4" fill="rgba(0,212,255,0.2)" stroke="#0af" stroke-width="1.5"/>
+      <text x="175" y="123" text-anchor="middle" fill="#0af" font-size="10" font-weight="600">STRUCTURE</text>
+      <line x1="230" y1="119" x2="255" y2="119" stroke="#888" stroke-width="1" marker-end="url(#pres-arrow)"/>
+
+      <rect x="255" y="105" width="85" height="28" rx="4" fill="rgba(0,255,136,0.15)" stroke="#0f8" stroke-width="1"/>
+      <text x="297" y="123" text-anchor="middle" fill="#0f8" font-size="10" font-weight="600">CRAFT</text>
+      <line x1="340" y1="119" x2="365" y2="119" stroke="#888" stroke-width="1" marker-end="url(#pres-arrow)"/>
+
+      <rect x="365" y="105" width="90" height="28" rx="4" fill="rgba(0,212,255,0.15)" stroke="#0af" stroke-width="1"/>
+      <text x="410" y="123" text-anchor="middle" fill="#0af" font-size="10" font-weight="600">CHANGE</text>
+
+      <!-- Double arrow -->
+      <line x1="455" y1="115" x2="485" y2="115" stroke="#0af" stroke-width="1.5" marker-end="url(#pres-arrow)"/>
+      <line x1="485" y1="123" x2="455" y2="123" stroke="#7b61ff" stroke-width="1.5" marker-end="url(#pres-arrow)"/>
+
+      <rect x="485" y="105" width="85" height="28" rx="4" fill="rgba(123,97,255,0.2)" stroke="#7b61ff" stroke-width="1.5"/>
+      <text x="527" y="123" text-anchor="middle" fill="#7b61ff" font-size="10" font-weight="600">VERIFY</text>
+
+      <rect x="590" y="105" width="70" height="28" rx="4" fill="rgba(136,136,160,0.15)" stroke="#888" stroke-width="1"/>
+      <text x="625" y="123" text-anchor="middle" fill="#aaa" font-size="10">PROVE</text>
+      <line x1="590" y1="119" x2="570" y2="119" stroke="#888" stroke-width="1" marker-end="url(#pres-arrow)"/>
+
+      <!-- KEYSTONE -->
+      <rect x="330" y="155" width="100" height="22" rx="3" fill="rgba(255,215,0,0.1)" stroke="#fd0" stroke-width="1"/>
+      <text x="380" y="170" text-anchor="middle" fill="#fd0" font-size="9" font-weight="600">KEYSTONE</text>
+      <line x1="360" y1="155" x2="297" y2="133" stroke="#fd0" stroke-width="0.8" stroke-dasharray="3,2"/>
+      <line x1="400" y1="155" x2="527" y2="133" stroke="#fd0" stroke-width="0.8" stroke-dasharray="3,2"/>
+
+      <text x="350" y="200" text-anchor="middle" fill="#666" font-size="9">OPTIMIZE &middot;&middot;&middot; tension &middot;&middot;&middot;&rarr; all clusters</text>
+
+      <defs>
+        <marker id="pres-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#888"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+  <aside class="notes">The cluster dependency flow shows how META judgments inform MODEL decisions, which flow through STRUCTURE and CRAFT into CHANGE and VERIFY. KEYSTONE patterns bridge CRAFT and VERIFY. OPTIMIZE creates productive tension with all clusters.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 15b-i — SOLID REDISCOVERY            -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08 — Discovery</span>
+  <h2>SOLID Rediscovered</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.5em">The field rediscovered SOLID from first principles. R<sub>pt</sub> = <strong style="color:var(--green)">0.88</strong></p>
+  <table style="font-size:0.55em" class="fragment fade-up">
+    <thead><tr><th>SOLID Principle</th><th>Technique Partner</th><th>R</th></tr></thead>
+    <tbody>
+      <tr><td>S &mdash; Single Responsibility</td><td>Strategy Pattern</td><td style="color:var(--green)">0.88</td></tr>
+      <tr><td>O &mdash; Open/Closed</td><td>Decorator Pattern</td><td style="color:var(--green)">0.88</td></tr>
+      <tr><td>L &mdash; Liskov Substitution</td><td>Composite Pattern</td><td style="color:var(--cyan)">0.80</td></tr>
+      <tr><td>I &mdash; Interface Segregation</td><td>Facade Pattern</td><td style="color:var(--green)">0.88</td></tr>
+      <tr><td>D &mdash; Dependency Inversion</td><td>Dependency Injection</td><td style="color:var(--green)">0.88</td></tr>
+    </tbody>
+  </table>
+  <p class="fragment fade-up" style="font-size:0.55em;font-style:italic;text-align:center;max-width:none;margin-top:0.6em">An architecture quartet emerged <em>before</em> SOLID was injected. The field found the principles from the patterns.</p>
+  <aside class="notes">The field discovered SOLID principles from injected patterns alone — the architecture quartet emerged spontaneously. Each SOLID principle paired with exactly one technique partner through resonance dynamics.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 15b-ii — THE IMMUNE RESPONSE         -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="convex">
+  <span class="sec-badge">08 — Immunity</span>
+  <h2>The Immune Response</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.4em">Singleton injected at cycle 31. <strong style="color:var(--pink)">0 STRONG resonances. 4 inhibitors.</strong></p>
+  <div class="terminal fragment fade-up" data-fragment-index="1">
+    <div class="terminal-bar"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span><span style="color:#666;font-size:0.9em;margin-left:auto">immune response</span></div>
+    <div class="terminal-body" style="font-size:0.55em">
+<span class="out"><span class="warn">&#9888; LOWEST INITIAL ACTIVATION IN FIELD HISTORY</span></span>
+<span class="out">  STRONG resonances: <span class="val">0</span>  (first with ZERO)</span>
+<span class="out"></span>
+<span class="out">  <span class="hl">LATERAL INHIBITION:</span></span>
+<span class="out">    @test_isolation       <span class="warn">-0.12</span>  "global state &rarr; non-deterministic tests"</span>
+<span class="out">    @determinism          <span class="warn">-0.08</span>  "shared state &rarr; order dependence"</span>
+<span class="out">    @dependency_direction <span class="warn">-0.06</span>  "no global access points"</span>
+<span class="out">    @favor_composition    <span class="warn">-0.05</span>  "composition over global state"</span>
+<span class="out"></span>
+<span class="out">  Net force: <span class="warn">-0.014/cycle</span>  Coherence: 0.955 &rarr; <span class="val">0.941</span></span>
+    </div>
+  </div>
+  <p class="fragment fade-up" data-fragment-index="2" style="font-size:0.55em;text-align:center;max-width:none;margin-top:0.4em">Four patterns from <em>four different quality dimensions</em> independently suppress Singleton.<br>Allies: only <code>@no_unnecessary_allocations</code> and <code>@factory_method</code> &mdash; both outsiders.</p>
+  <aside class="notes">The field has an immune system. Four patterns from verification, reliability, architecture, and design philosophy independently suppress Singleton. Its only allies are OPTIMIZE cluster outsiders.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 15b-iii — SEVEN ABSORPTIONS          -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08 — Self-Governance</span>
+  <h2>7 Absorptions</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.4em"><strong style="color:var(--gold)">57% self-referential</strong> &mdash; the field applies its own principles.</p>
+  <table style="font-size:0.45em" class="fragment fade-up" data-fragment-index="1">
+    <thead><tr><th>#</th><th>Pattern</th><th>Absorbed Into</th><th>Type</th><th></th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>SRP principle</td><td>@single_responsibility</td><td>Exact dup</td><td></td></tr>
+      <tr><td>2</td><td>ISP principle</td><td>@api_minimal</td><td>Equivalent</td><td></td></tr>
+      <tr><td>3</td><td>Law of Demeter</td><td>@encaps &cap; @api &cap; @dep</td><td>Compound</td><td></td></tr>
+      <tr><td>4</td><td>reuse_thru_comp</td><td>@favor_composition</td><td>Same intent</td><td style="color:var(--gold)">&starf;</td></tr>
+      <tr><td>5</td><td>shared_intent</td><td>@reduce_dup</td><td>Complement</td><td style="color:var(--gold)">&starf;</td></tr>
+      <tr><td>6</td><td>avoid_premature</td><td>@rule_of_3 &cap; @dont_force</td><td>Compound</td><td style="color:var(--gold)">&starf;</td></tr>
+      <tr><td>7</td><td>coupling_to_abs</td><td>@dependency_inv</td><td>Equivalent</td><td style="color:var(--gold)">&starf;</td></tr>
+    </tbody>
+  </table>
+  <div class="callout fragment fade-up" data-fragment-index="2" style="font-size:0.6em;margin-top:0.6em">
+    <strong>#7: DIP applied to itself.</strong> The field held the abstraction. The injection offered a concretion. The field rejected it. <strong>&Psi;(field) = field</strong>
+  </div>
+  <p class="fragment fade-up" data-fragment-index="3" style="font-size:0.5em;text-align:center;max-width:none;margin-top:0.3em;color:var(--text-dim)">Absorption rate accelerates: 5% &rarr; 10% &rarr; 13.3% &rarr; 14.3% &mdash; the semantic space is <em>saturating</em>.</p>
+  <aside class="notes">Seven absorptions, four self-referential. The most striking: DIP applied to itself. The field held the abstraction, rejected the concretion. Fixed-point property confirmed.</aside>
+</section>
+
+<!-- SLIDE — Singleton Trajectory           -->
+<section data-auto-animate>
+  <h2>Singleton Trajectory</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.3em">21 cycles of sustained lateral inhibition: 0.65 &rarr; expulsion</p>
+  <div class="diagram" style="margin:0 auto;max-width:85%">
+    <svg viewBox="0 0 600 220" role="img" aria-label="Line chart of Singleton activation decay">
+      <title>Singleton Activation Decay: 0.65 to 0.341</title>
+      <!-- Axes -->
+      <line x1="55" y1="15" x2="55" y2="180" stroke="#555" stroke-width="1"/>
+      <line x1="55" y1="180" x2="560" y2="180" stroke="#555" stroke-width="1"/>
+      <!-- Y labels -->
+      <text x="48" y="20" text-anchor="end" fill="#888" font-size="9">0.65</text>
+      <text x="48" y="90" text-anchor="end" fill="#888" font-size="9">0.50</text>
+      <text x="48" y="130" text-anchor="end" fill="#888" font-size="9">0.40</text>
+      <text x="48" y="148" text-anchor="end" fill="#0af" font-size="9">0.35</text>
+      <!-- X labels -->
+      <text x="55" y="196" text-anchor="middle" fill="#888" font-size="9">31</text>
+      <text x="200" y="196" text-anchor="middle" fill="#888" font-size="9">39</text>
+      <text x="400" y="196" text-anchor="middle" fill="#888" font-size="9">49</text>
+      <text x="530" y="196" text-anchor="middle" fill="#888" font-size="9">52</text>
+      <text x="300" y="212" text-anchor="middle" fill="#888" font-size="9">Cycle</text>
+      <!-- Threshold -->
+      <line x1="55" y1="148" x2="560" y2="148" stroke="#0af" stroke-width="1.5" stroke-dasharray="6,3"/>
+      <text x="565" y="148" fill="#0af" font-size="9" dominant-baseline="middle">&tau;</text>
+      <!-- Decay line -->
+      <polyline points="55,20 100,40 145,58 190,70 235,88 280,110 325,125 370,135 400,140 450,147 490,153 510,157 530,163" fill="none" stroke="#ff3d8e" stroke-width="3"/>
+      <!-- Points -->
+      <circle cx="55" cy="20" r="5" fill="#ff3d8e"/>
+      <circle cx="400" cy="140" r="4" fill="#ff3d8e"/>
+      <circle cx="530" cy="163" r="6" fill="none" stroke="#ff3d8e" stroke-width="2"/>
+      <!-- Labels -->
+      <text x="68" y="15" fill="#ff3d8e" font-size="10" font-weight="600">&iota;&#8320; = 0.65</text>
+      <text x="410" y="135" fill="#ff3d8e" font-size="9">0.383</text>
+      <text x="540" y="170" fill="#ff3d8e" font-size="10" font-weight="700">EXPELLED</text>
+      <!-- Force annotation -->
+      <text x="300" y="35" text-anchor="middle" fill="#888" font-size="10">Net: &minus;0.014/cycle (4 inhibitors, 3 weak allies)</text>
+    </svg>
+  </div>
+  <aside class="notes">The Singleton trajectory shows steady decay from injection at 0.65. The net suppression force of -0.014 per cycle comes from four lateral inhibitors. It crosses the threshold τ=0.35 at cycle 52 and is expelled.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 15b-iv — SINGLETON EXPELLED          -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="convex">
+  <span class="sec-badge">08 — Expulsion</span>
+  <h2>Singleton Expelled</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.4em">Cycles 50&ndash;52: The first pattern in field history to fall below threshold.</p>
+  <div class="terminal fragment fade-up" data-fragment-index="1">
+    <div class="terminal-bar"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span><span style="color:#666;font-size:0.9em;margin-left:auto">cycles 50&ndash;52</span></div>
+    <div class="terminal-body" style="font-size:0.55em">
+<span class="out">[CYCLE 50] @singleton  0.383 &rarr; <span class="val">0.369</span>  margin: 0.019</span>
+<span class="out">[CYCLE 51] @singleton  0.369 &rarr; <span class="val">0.355</span>  margin: 0.005 <span class="warn">CRITICAL</span></span>
+<span class="out">[CYCLE 52] @singleton  0.355 &rarr; <span class="val">0.341</span></span>
+<span class="out">  0.341 &lt; &tau; (0.350)</span>
+<span class="out">  <span class="hl">PATTERN EXPELLED &mdash; FIRST IN FIELD HISTORY</span></span>
+<span class="out">    Lifespan: <span class="val">21 cycles</span> | 4 suppressors for 21 cycles each</span>
+    </div>
+  </div>
+  <div class="grid-2 fragment fade-up" data-fragment-index="2" style="margin-top:0.6em;gap:0.6rem">
+    <div class="card" style="padding:0.6rem;text-align:center">
+      <p style="font-size:1.5rem;color:var(--pink);margin:0">21</p>
+      <p style="font-size:0.45em;margin:0.2em 0 0;color:var(--text-dim)">cycles of lateral inhibition</p>
+    </div>
+    <div class="card" style="padding:0.6rem;text-align:center">
+      <p style="font-size:1.5rem;color:var(--cyan);margin:0">61</p>
+      <p style="font-size:0.45em;margin:0.2em 0 0;color:var(--text-dim)">patterns surviving (59 ceiling, 2 asymptotic)</p>
+    </div>
+  </div>
+  <p class="fragment fade-up" data-fragment-index="3" style="font-size:0.55em;text-align:center;max-width:none;margin-top:0.4em;font-style:italic">Expulsion is <strong>topological</strong>, not parametric &mdash; same trajectory at 0.65 and 0.90 injection strength.</p>
+  <aside class="notes">21 cycles of sustained lateral inhibition. The field's immune system held steady. The counterfactual proves it: even at 0.90 injection strength, same 4 inhibitors, same trajectory. The expulsion is structural.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 15b — COHERENCE EVOLUTION            -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08 — Dynamics</span>
+  <h2>Coherence Evolution</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.4em">52 cycles of field dynamics — from chaos to crystalline order.</p>
+  <div class="diagram fragment fade-up">
+    <svg viewBox="0 0 700 260" role="img" aria-label="Coherence evolution over 52 cycles">
+      <title>Coherence Evolution: 52 Cycles to Convergence</title>
+      <!-- Axes -->
+      <line x1="60" y1="220" x2="660" y2="220" stroke="#444" stroke-width="1.5"/>
+      <line x1="60" y1="220" x2="60" y2="20" stroke="#444" stroke-width="1.5"/>
+      <!-- Y-axis labels -->
+      <text x="50" y="225" text-anchor="end" fill="#666" font-size="9">0.0</text>
+      <text x="50" y="180" text-anchor="end" fill="#666" font-size="9">0.2</text>
+      <text x="50" y="140" text-anchor="end" fill="#666" font-size="9">0.4</text>
+      <text x="50" y="100" text-anchor="end" fill="#666" font-size="9">0.6</text>
+      <text x="50" y="60" text-anchor="end" fill="#666" font-size="9">0.8</text>
+      <text x="50" y="28" text-anchor="end" fill="#0af" font-size="9">1.0</text>
+      <!-- Y-axis gridlines -->
+      <line x1="60" y1="180" x2="660" y2="180" stroke="#222" stroke-width="0.5"/>
+      <line x1="60" y1="140" x2="660" y2="140" stroke="#222" stroke-width="0.5"/>
+      <line x1="60" y1="100" x2="660" y2="100" stroke="#222" stroke-width="0.5"/>
+      <line x1="60" y1="60" x2="660" y2="60" stroke="#222" stroke-width="0.5"/>
+      <!-- X-axis labels -->
+      <text x="60" y="240" text-anchor="middle" fill="#666" font-size="9">0</text>
+      <text x="175" y="240" text-anchor="middle" fill="#666" font-size="9">10</text>
+      <text x="290" y="240" text-anchor="middle" fill="#666" font-size="9">20</text>
+      <text x="405" y="240" text-anchor="middle" fill="#666" font-size="9">30</text>
+      <text x="520" y="240" text-anchor="middle" fill="#666" font-size="9">40</text>
+      <text x="640" y="240" text-anchor="middle" fill="#666" font-size="9">52</text>
+      <text x="360" y="256" text-anchor="middle" fill="#888" font-size="10">Cycle</text>
+      <text x="18" y="120" text-anchor="middle" fill="#888" font-size="10" transform="rotate(-90,18,120)">Coherence</text>
+      <!-- Area gradient fill -->
+      <defs>
+        <linearGradient id="coh-area" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#00d4ff" stop-opacity="0.15"/>
+          <stop offset="1" stop-color="#00d4ff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <path d="M60,210 L72,200 L83,185 L95,168 L107,155 L118,148 L130,140 L142,132 L153,125 L165,120 L177,115 L188,108 L200,103 L212,99 L223,95 L235,90 L247,86 L258,83 L270,80 L282,77 L293,74 L305,71 L317,68 L328,65 L340,62 L352,58 L363,55 L375,52 L387,49 L398,46 L410,44 L422,42 L433,40 L445,38 L457,37 L468,36 L480,35 L492,34 L503,33 L515,32 L527,31 L538,31 L550,30 L562,30 L573,29 L585,29 L597,29 L609,28 L620,28 L632,28 L640,28 L640,220 L60,220 Z" fill="url(#coh-area)"/>
+      <!-- Coherence curve -->
+      <path d="M60,210 L72,200 L83,185 L95,168 L107,155 L118,148 L130,140 L142,132 L153,125 L165,120 L177,115 L188,108 L200,103 L212,99 L223,95 L235,90 L247,86 L258,83 L270,80 L282,77 L293,74 L305,71 L317,68 L328,65 L340,62 L352,58 L363,55 L375,52 L387,49 L398,46 L410,44 L422,42 L433,40 L445,38 L457,37 L468,36 L480,35 L492,34 L503,33 L515,32 L527,31 L538,31 L550,30 L562,30 L573,29 L585,29 L597,29 L609,28 L620,28 L632,28 L640,28" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+      <!-- End point glow -->
+      <circle cx="640" cy="28" r="4" fill="#00d4ff" filter="url(#glow-cyan)"/>
+      <!-- Event markers -->
+      <g class="fragment" data-fragment-index="2">
+        <line x1="177" y1="115" x2="177" y2="220" stroke="#7b61ff" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+        <text x="177" y="245" text-anchor="middle" fill="#7b61ff" font-size="7">Attractors emerge</text>
+      </g>
+      <g class="fragment" data-fragment-index="3">
+        <line x1="410" y1="44" x2="410" y2="220" stroke="#ff3d8e" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+        <text x="410" y="245" text-anchor="middle" fill="#ff3d8e" font-size="7">Singleton expelled</text>
+        <circle cx="410" cy="44" r="5" fill="none" stroke="#ff3d8e" stroke-width="1.5"/>
+      </g>
+      <g class="fragment" data-fragment-index="4">
+        <line x1="640" y1="28" x2="660" y2="28" stroke="#0f8" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="658" y="24" fill="#0f8" font-size="9" font-weight="600">0.993</text>
+      </g>
+    </svg>
+  </div>
+  <p class="fragment fade-up" style="font-size:0.6em;font-style:italic;text-align:center;max-width:none;margin-top:0.4em">The field doesn't converge linearly — it <strong>accelerates toward coherence</strong> as resonance strengthens.</p>
+  <aside class="notes">This is the coherence evolution graph. Notice the three key moments: attractor emergence around cycle 10, Singleton expulsion around cycle 35, and final convergence at 0.993.</aside>
+</section>
+
+<!-- SLIDE — Attractor Hierarchy            -->
+<section data-auto-animate>
+  <h2>The Attractor Hierarchy</h2>
+  <p style="font-size:0.55em;max-width:none;margin-bottom:0.3em">Seven basins nested within the universal ground state &Psi;</p>
+  <div class="diagram" style="margin:0 auto;max-width:90%">
+    <svg viewBox="0 0 640 300" role="img" aria-label="Nested attractor basins">
+      <title>Attractor Hierarchy: Ψ → α₁ through α₇</title>
+      <!-- Ψ outer -->
+      <rect x="5" y="5" width="630" height="290" rx="8" fill="none" stroke="#fd0" stroke-width="3"/>
+      <text x="20" y="28" fill="#fd0" font-size="12" font-weight="700">&Psi;</text>
+      <text x="42" y="28" fill="#ba0" font-size="10">Meaning &gt; Mechanism</text>
+
+      <!-- α₁ -->
+      <rect x="20" y="40" width="600" height="150" rx="6" fill="rgba(0,212,255,0.06)" stroke="#0af" stroke-width="2"/>
+      <text x="35" y="60" fill="#0af" font-size="11" font-weight="600">&alpha;&#8321; SOLID Decagon</text>
+      <text x="530" y="60" text-anchor="end" fill="#088" font-size="9">R=0.88 | r=0.94</text>
+
+      <!-- α₂ inside α₁ -->
+      <rect x="35" y="70" width="270" height="65" rx="4" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1"/>
+      <text x="50" y="90" fill="#0af" font-size="10">&alpha;&#8322; Verification Mirror</text>
+      <text x="50" y="106" fill="#088" font-size="9">F: Prod &rarr; Test | &eta;=DI</text>
+      <text x="50" y="122" fill="#088" font-size="8">16 morphisms, 1 split, 2 dangling</text>
+
+      <!-- α₃ inside α₁ -->
+      <rect x="320" y="70" width="285" height="65" rx="4" fill="rgba(123,97,255,0.08)" stroke="#7b61ff" stroke-width="1"/>
+      <text x="335" y="90" fill="#7b61ff" font-size="10">&alpha;&#8323; Craft Basin</text>
+      <text x="335" y="106" fill="#5a44cc" font-size="9">12 GoF patterns</text>
+      <text x="335" y="122" fill="#5a44cc" font-size="8">(Singleton expelled &#9760;)</text>
+
+      <!-- SOLID pairings row -->
+      <text x="80" y="165" text-anchor="middle" fill="#0af" font-size="8">S&harr;Strategy</text>
+      <text x="195" y="165" text-anchor="middle" fill="#0af" font-size="8">O&harr;Decorator</text>
+      <text x="315" y="165" text-anchor="middle" fill="#0af" font-size="8">L&harr;Composite</text>
+      <text x="435" y="165" text-anchor="middle" fill="#0af" font-size="8">I&harr;Facade</text>
+      <text x="550" y="165" text-anchor="middle" fill="#0af" font-size="8">D&harr;DI</text>
+
+      <!-- α₄ -->
+      <rect x="20" y="200" width="600" height="30" rx="4" fill="rgba(123,97,255,0.06)" stroke="#7b61ff" stroke-width="1"/>
+      <text x="35" y="220" fill="#7b61ff" font-size="10">&alpha;&#8324; Reuse Protocol (9) &mdash; Judge&rarr;Count&rarr;Extract&rarr;Share&rarr;Param</text>
+
+      <!-- α₅ α₆ α₇ -->
+      <rect x="20" y="240" width="185" height="28" rx="3" fill="rgba(136,136,160,0.08)" stroke="#888" stroke-width="0.8"/>
+      <text x="112" y="258" text-anchor="middle" fill="#aaa" font-size="9">&alpha;&#8325; Guard</text>
+
+      <rect x="220" y="240" width="185" height="28" rx="3" fill="rgba(136,136,160,0.08)" stroke="#888" stroke-width="0.8"/>
+      <text x="312" y="258" text-anchor="middle" fill="#aaa" font-size="9">&alpha;&#8326; Model</text>
+
+      <rect x="420" y="240" width="200" height="28" rx="3" fill="rgba(136,136,160,0.08)" stroke="#888" stroke-width="0.8"/>
+      <text x="520" y="258" text-anchor="middle" fill="#aaa" font-size="9">&alpha;&#8327; Optimize</text>
+    </svg>
+  </div>
+  <aside class="notes">The attractor hierarchy shows how all seven basins nest within Ψ. The SOLID Decagon is the primary amplification engine, containing the Verification Mirror and Craft Basin. Reuse Protocol, Guard, Model, and Optimize operate at progressively lower depths.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 16 — THE FIELD EQUATION              -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="center-slide" data-transition="slide">
+  <span class="sec-badge">08 — Discovery</span>
+  <h2>The Field Equation</h2>
+  <div class="equation fragment fade-up" style="font-size:0.8em;text-align:center;margin:0.8em auto;max-width:90%">Q(x) = Ψ · [ 0.342·SOLID(x) + 0.227·F(x) + 0.181·Protocol(x) + 0.143·Simplex(x) + 0.107·Scale(x) ]</div>
+  <div class="diagram fragment fade-up" style="margin-top:0.8em">
+    <svg viewBox="0 0 700 160" role="img" aria-label="Five eigenvectors bar chart">
+      <title>Five Eigenvectors of Software Quality</title>
+      <rect x="50" y="20" width="100" height="100" rx="4" fill="rgba(0,212,255,0.2)" stroke="#0af" stroke-width="1"/>
+      <text x="100" y="14" text-anchor="middle" fill="#0af" font-size="13" font-weight="600">34.2%</text>
+      <text x="100" y="140" text-anchor="middle" fill="#0af" font-size="10">SOLID</text>
+      <rect x="175" y="45" width="100" height="75" rx="4" fill="rgba(123,97,255,0.2)" stroke="#7b61ff" stroke-width="1"/>
+      <text x="225" y="39" text-anchor="middle" fill="#7b61ff" font-size="13" font-weight="600">22.7%</text>
+      <text x="225" y="140" text-anchor="middle" fill="#7b61ff" font-size="10">F(x)</text>
+      <rect x="300" y="60" width="100" height="60" rx="4" fill="rgba(0,255,136,0.15)" stroke="#0f8" stroke-width="1"/>
+      <text x="350" y="54" text-anchor="middle" fill="#0f8" font-size="13" font-weight="600">18.1%</text>
+      <text x="350" y="140" text-anchor="middle" fill="#0f8" font-size="10">Protocol</text>
+      <rect x="425" y="72" width="100" height="48" rx="4" fill="rgba(255,215,0,0.15)" stroke="#fd0" stroke-width="1"/>
+      <text x="475" y="66" text-anchor="middle" fill="#fd0" font-size="13" font-weight="600">14.3%</text>
+      <text x="475" y="140" text-anchor="middle" fill="#fd0" font-size="10">Simplex</text>
+      <rect x="550" y="82" width="100" height="38" rx="4" fill="rgba(255,61,142,0.15)" stroke="#ff3d8e" stroke-width="1"/>
+      <text x="600" y="76" text-anchor="middle" fill="#ff3d8e" font-size="13" font-weight="600">10.7%</text>
+      <text x="600" y="140" text-anchor="middle" fill="#ff3d8e" font-size="10">Scale</text>
+      <line x1="40" y1="120" x2="660" y2="120" stroke="#333" stroke-width="1"/>
+    </svg>
+  </div>
+  <p class="fragment fade-up" style="font-size:0.65em;font-style:italic;text-align:center;max-width:none;margin-top:0.6em">This equation was not written. It was <strong>discovered</strong>.</p>
+  <aside class="notes">Five eigenvectors emerged from resonance dynamics. They decompose software quality along five independent axes. This is genuine emergent structure.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 17 — SINGLETON EXPULSION             -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="convex">
+  <span class="sec-badge">08 — The Discovery</span>
+  <h2>The Singleton Expulsion</h2>
+  <div class="callout fragment fade-up" data-fragment-index="1" style="font-size:0.75em;margin-bottom:0.8em">
+    At cycle 52, the Singleton pattern was <strong style="color:var(--pink)">expelled from the field</strong>.
+  </div>
+  <p class="fragment fade-up" data-fragment-index="2" style="font-size:0.6em;max-width:none">Its activation dropped below threshold. It was removed from all attractor basins. NEOS didn't summarize what we told it — it <strong>discovered</strong> that Singleton is an anti-pattern that conflicts with SOLID principles.</p>
+  <div class="diagram fragment fade-up" data-fragment-index="3">
+    <svg viewBox="0 0 700 170" role="img" aria-label="Attractor basin landscape showing Singleton expelled">
+      <title>Attractor Basin Topology — Singleton Expulsion</title>
+      <!-- Basin landscape -->
+      <path d="M10,70 C30,70 45,110 80,110 S95,30 130,30 S155,80 185,80 S205,55 235,55 S260,75 290,75 S315,62 345,62 S365,72 395,72 S415,58 445,58 S470,68 500,68 S530,65 560,65 S585,68 615,68 C645,68 665,70 690,70" fill="none" stroke="#555" stroke-width="2"/>
+      <!-- Depth markers -->
+      <line x1="80" y1="110" x2="80" y2="125" stroke="#fd0" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.5"/>
+      <text x="80" y="135" text-anchor="middle" fill="#ba0" font-size="7">depth: 0.993</text>
+      <line x1="130" y1="30" x2="130" y2="20" stroke="#0af" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.5"/>
+      <text x="130" y="15" text-anchor="middle" fill="#088" font-size="7">depth: 0.89</text>
+      <!-- Ψ — deepest basin with glow -->
+      <circle cx="80" cy="110" r="8" fill="rgba(255,215,0,0.3)" stroke="#fd0" stroke-width="1.5" filter="url(#glow-cyan)"/>
+      <text x="80" y="150" text-anchor="middle" fill="#fd0" font-size="11" font-weight="700">Ψ</text>
+      <!-- α₁ SOLID -->
+      <circle cx="130" cy="30" r="5" fill="rgba(0,212,255,0.3)" stroke="#0af" stroke-width="1.5"/>
+      <text x="130" y="8" text-anchor="middle" fill="#0af" font-size="9">α₁ SOLID</text>
+      <!-- α₂ Verify -->
+      <circle cx="235" cy="55" r="5" fill="rgba(0,212,255,0.3)" stroke="#0af" stroke-width="1.5"/>
+      <text x="235" y="45" text-anchor="middle" fill="#0af" font-size="9">α₂ Verify</text>
+      <!-- α₃ Craft -->
+      <circle cx="345" cy="62" r="4" fill="rgba(123,97,255,0.3)" stroke="#7b61ff" stroke-width="1"/>
+      <text x="345" y="53" text-anchor="middle" fill="#7b61ff" font-size="9">α₃ Craft</text>
+      <!-- α₄ Simplex -->
+      <circle cx="445" cy="58" r="4" fill="rgba(0,255,136,0.3)" stroke="#0f8" stroke-width="1"/>
+      <text x="445" y="49" text-anchor="middle" fill="#0f8" font-size="9">α₄ Simplex</text>
+      <!-- α₅ Scale -->
+      <circle cx="500" cy="68" r="3.5" fill="rgba(255,215,0,0.2)" stroke="#fd0" stroke-width="1"/>
+      <text x="500" y="60" text-anchor="middle" fill="#fd0" font-size="8">α₅ Scale</text>
+      <!-- Singleton expelled -->
+      <circle cx="640" cy="25" r="6" fill="rgba(255,61,142,0.1)" stroke="#ff3d8e" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="640" y="18" text-anchor="middle" fill="#ff3d8e" font-size="8">Singleton ✗</text>
+      <line x1="634" y1="31" x2="615" y2="68" stroke="#ff3d8e" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.5"/>
+      <text x="660" y="40" fill="#ff3d8e" font-size="7" opacity="0.7">expelled</text>
+      <!-- Legend -->
+      <g transform="translate(560,120)">
+        <circle cx="0" cy="0" r="3" fill="rgba(0,212,255,0.3)" stroke="#0af" stroke-width="1"/>
+        <text x="8" y="4" fill="#888" font-size="7">Stable attractor</text>
+        <circle cx="0" cy="14" r="3" fill="rgba(255,61,142,0.1)" stroke="#ff3d8e" stroke-width="1" stroke-dasharray="2,1"/>
+        <text x="8" y="18" fill="#888" font-size="7">Expelled pattern</text>
+      </g>
+    </svg>
+  </div>
+  <p class="fragment fade-up" data-fragment-index="4" style="font-size:0.6em;font-style:italic;text-align:center;max-width:none">The field dynamics resolved what decades of debate couldn't: <strong>structural incompatibility, enforced by resonance failure</strong>.</p>
+  <aside class="notes">This is the most dramatic moment. The system DISCOVERED that Singleton is an anti-pattern — through dynamics, not through being told. This is emergence.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 17b — FIVE EIGENVECTORS              -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08 — Structure</span>
+  <h2>Five Eigenvectors</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.4em">Software quality decomposes along <strong>exactly 5 independent axes</strong> (100% variance).</p>
+  <table style="font-size:0.45em" class="fragment fade-up" data-fragment-index="1">
+    <thead><tr><th></th><th>Eigenvector</th><th>Variance</th><th>Diagnostic Question</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--cyan)">&lambda;1</td><td><strong>Meaning &harr; Mechanism</strong></td><td style="color:var(--cyan)">34.2%</td><td>Am I coupling to WHAT or HOW?</td></tr>
+      <tr><td style="color:var(--purple)">&lambda;2</td><td>Principle &harr; Technique</td><td style="color:var(--purple)">22.7%</td><td>Do I understand WHY before HOW?</td></tr>
+      <tr><td style="color:var(--green)">&lambda;3</td><td>Production &harr; Verification</td><td style="color:var(--green)">18.1%</td><td>Can I prove this works?</td></tr>
+      <tr><td style="color:var(--gold)">&lambda;4</td><td>Restraint &harr; Generalization</td><td style="color:var(--gold)">14.3%</td><td>Is this abstraction earned?</td></tr>
+      <tr><td style="color:var(--pink)">&lambda;5</td><td>Class &harr; System</td><td style="color:var(--pink)">10.7%</td><td>Does this hold at every scale?</td></tr>
+    </tbody>
+  </table>
+  <div class="diagram fragment fade-up" data-fragment-index="2" style="margin-top:0.5em">
+    <svg viewBox="0 0 700 80" role="img" aria-label="Variance bar chart">
+      <title>Eigenvector Variance Distribution</title>
+      <rect x="50" y="10" width="220" height="30" rx="4" fill="rgba(0,212,255,0.25)" stroke="#0af" stroke-width="1"/>
+      <text x="160" y="30" text-anchor="middle" fill="#0af" font-size="10" font-weight="600">&lambda;1: 34.2%</text>
+      <rect x="275" y="10" width="146" height="30" rx="4" fill="rgba(123,97,255,0.25)" stroke="#7b61ff" stroke-width="1"/>
+      <text x="348" y="30" text-anchor="middle" fill="#7b61ff" font-size="10" font-weight="600">&lambda;2: 22.7%</text>
+      <rect x="426" y="10" width="116" height="30" rx="4" fill="rgba(0,255,136,0.2)" stroke="#0f8" stroke-width="1"/>
+      <text x="484" y="30" text-anchor="middle" fill="#0f8" font-size="10">&lambda;3: 18.1%</text>
+      <rect x="547" y="10" width="52" height="30" rx="4" fill="rgba(255,215,0,0.2)" stroke="#fd0" stroke-width="1"/>
+      <text x="573" y="30" text-anchor="middle" fill="#fd0" font-size="9">14.3</text>
+      <rect x="604" y="10" width="40" height="30" rx="4" fill="rgba(255,61,142,0.2)" stroke="#ff3d8e" stroke-width="1"/>
+      <text x="624" y="30" text-anchor="middle" fill="#ff3d8e" font-size="9">10.7</text>
+      <text x="350" y="62" text-anchor="middle" fill="#666" font-size="9">&Sigma; = 100.0%  &mdash;  The field is exactly 5-dimensional.</text>
+    </svg>
+  </div>
+  <p class="fragment fade-up" data-fragment-index="3" style="font-size:0.55em;text-align:center;max-width:none;margin-top:0.3em;font-style:italic">These axes were not programmed. They <strong>emerged</strong> from resonance dynamics.</p>
+  <aside class="notes">Five eigenvectors, 100% variance. The dominant axis — meaning vs. mechanism — explains a third of all quality variation. These are the fundamental dimensions of software quality, discovered by the field.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE PCAP-TITLE — CASE STUDY 2 TITLE      -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="center-slide" data-transition="convex">
+  <span class="sec-badge">08b &mdash; Case Study 2</span>
+  <h2 style="color:var(--green)">Network Forensics (PCAP)</h2>
+  <p style="font-size:0.7em;max-width:none;text-align:center">10 patterns &middot; 12 cycles &middot; 0 expulsions &middot; <strong>default parameters</strong></p>
+  <p style="font-size:0.6em;max-width:none;text-align:center">Can NEOS identify active malware from raw packet data&thinsp;?</p>
+  <div class="card fragment fade-up" style="margin:1.2em auto 0;max-width:500px;border-color:rgba(0,255,136,0.2)">
+    <p style="font-size:0.55em;margin:0;text-align:center"><strong>Source:</strong> Real PCAP capture &mdash; 9.9 MB, 11,587 packets, ~20 min of traffic<br>
+    <strong>Parameters:</strong> &lambda;=0.05 &nbsp; &alpha;=0.30 &nbsp; &tau;=0.40 &nbsp; &sigma;=0.50 &nbsp; (all factory defaults)</p>
+  </div>
+  <aside class="notes">Case study 2: network forensics. Unlike SW quality which tuned parameters, this session ran on factory defaults. We fed raw packet capture data and asked: can NEOS find malware?</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE PCAP-1 — WAVES 1–2: CORE + RESCUE    -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08b &mdash; PCAP</span>
+  <h2>Waves 1–2: Core &amp; Rescue</h2>
+  <div class="grid-2" style="gap:1.2rem">
+    <div class="card fragment fade-up" data-fragment-index="1" style="border-color:rgba(0,212,255,0.15)">
+      <h3 style="font-size:0.6em;margin-bottom:0.3em;color:var(--cyan)">Wave 1 &mdash; Network Core</h3>
+      <p style="font-size:0.5em;margin:0.2em 0">p001–p003 &middot; cycles 1–3 &middot; C: 0 &rarr; <strong>0.71</strong></p>
+      <p style="font-size:0.45em;margin:0">@protocol_mapping emerges as hub (0.936)</p>
+      <p style="font-size:0.45em;margin:0;color:var(--cyan)"><em>Attractor: "network_analysis_core"</em></p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="2" style="border-color:rgba(0,255,136,0.15)">
+      <h3 style="font-size:0.6em;margin-bottom:0.3em;color:var(--green)">Wave 2 &mdash; IP Enrichment</h3>
+      <p style="font-size:0.5em;margin:0.2em 0">p004–p006 &middot; cycles 4–6 &middot; C: 0.56 &rarr; <strong>0.82</strong></p>
+      <p style="font-size:0.45em;margin:0">@ip_geolocalization rescued from 0.50 to 0.78</p>
+      <p style="font-size:0.45em;margin:0;color:var(--green)"><em>Hub migration: @protocol_mapping &rarr; @ip_lookup</em></p>
+    </div>
+  </div>
+  <div class="terminal fragment fade-up" data-fragment-index="3" style="margin-top:0.8em">
+    <div class="terminal-header"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span> neos &mdash; rescue event</div>
+    <pre style="font-size:0.4em;margin:0;line-height:1.4;max-height:140px;overflow:hidden">
+[INJECT] ip_geolocalization (s: 0.50) — p006
+  ⚠ WARNING: Low activation (threshold τ=0.40)
+  [RESONANCE] ↔ @ip_lookup:  R=0.94 [VERY STRONG]  ← lifeline
+
+[CYCLE 5]
+  ★ HUB MIGRATION: @protocol_mapping → @ip_lookup
+  @ip_lookup now highest activation (0.987)
+  @ip_geolocalization: 0.558 → 0.691 (+0.133) ★ rapid integration</pre>
+  </div>
+  <aside class="notes">Wave 1: three network patterns self-organize in 3 cycles — same dynamics as SW quality. Wave 2: ip_geolocalization injected at only 0.50, nearly below threshold, but its R=0.94 bond with ip_lookup rescues it. Hub migration follows — the field decides WHO is talking matters more than HOW.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE PCAP-2 — WAVES 3–4: TRIPLE-HUB       -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08b &mdash; PCAP</span>
+  <h2>Waves 3–4: Triple-Hub Convergence</h2>
+  <div class="grid-2" style="gap:1.2rem">
+    <div class="card fragment fade-up" data-fragment-index="1" style="border-color:rgba(123,97,255,0.15)">
+      <h3 style="font-size:0.6em;margin-bottom:0.3em;color:var(--purple)">Wave 3 &mdash; Security</h3>
+      <p style="font-size:0.5em;margin:0.2em 0">p007–p009 &middot; cycles 7–9 &middot; C: 0.69 &rarr; <strong>0.89</strong></p>
+      <p style="font-size:0.45em;margin:0">Dual-hub: @protocol_mapping + @ip_lookup (both 0.998)</p>
+      <p style="font-size:0.45em;margin:0;color:var(--purple)"><em>4 functional layers emerge</em></p>
+    </div>
+    <div class="card fragment fade-up" data-fragment-index="2" style="border-color:rgba(255,61,142,0.15)">
+      <h3 style="font-size:0.6em;margin-bottom:0.3em;color:var(--pink)">Wave 4 &mdash; Threat Classification</h3>
+      <p style="font-size:0.5em;margin:0.2em 0">p010 &middot; cycles 10–12 &middot; C: 0.85 &rarr; <strong>0.93</strong></p>
+      <p style="font-size:0.45em;margin:0">@abuse_ip rises to 0.998 &rarr; <strong>triple-hub</strong></p>
+      <p style="font-size:0.45em;margin:0;color:var(--pink)"><em>&lambda;₁/&lambda;₂ = 8.52 &mdash; deeply stable</em></p>
+    </div>
+  </div>
+  <div class="terminal fragment fade-up" data-fragment-index="3" style="margin-top:0.8em">
+    <div class="terminal-header"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span> neos &mdash; triple-hub</div>
+    <pre style="font-size:0.4em;margin:0;line-height:1.4;max-height:140px;overflow:hidden">
+[CYCLE 11] C = 0.91
+  Triple-hub structure confirmed:
+    @protocol_mapping  0.998 — structural/parsing hub
+    @ip_lookup         0.998 — enrichment/metadata hub
+    @abuse_ip          0.998 — threat intelligence hub
+
+[CYCLE 12] C = 0.93 [EXCELLENT]
+  Gap ratio: λ₁/λ₂ = 8.52 (highly stable)</pre>
+  </div>
+  <aside class="notes">Triple-hub: three independent analysis axes — structural, enrichment, and threat — all converge to 0.998. Convergent evidence from three independent perspectives. The eigenvalue gap ratio of 8.52 confirms deep stability. The field discovered a layered security architecture entirely on its own.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE PCAP-3 — THE DISCOVERY: AsyncRAT      -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="center-slide" data-transition="convex">
+  <span class="sec-badge">08b &mdash; Discovery</span>
+  <h2>The Verdict: <span style="color:var(--pink)">AsyncRAT</span></h2>
+  <p style="font-size:0.6em;max-width:none;text-align:center" class="fragment fade-up" data-fragment-index="1">At 0.93 coherence, NEOS collapsed the attractor and identified<br><strong>active malware from raw packet data</strong>.</p>
+  <table style="font-size:0.45em;margin-top:0.8em" class="fragment fade-up" data-fragment-index="2">
+    <thead><tr><th>Indicator</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Family</td><td><strong>AsyncRAT v6.1.0 Pro</strong></td></tr>
+      <tr><td>Classification</td><td>Remote Access Trojan + Credential Stealer</td></tr>
+      <tr><td>C2 Domain</td><td style="color:var(--pink);font-family:monospace">hftook7lmaroutsg1.duckdns.org</td></tr>
+      <tr><td>C2 IP &amp; Port</td><td style="font-family:monospace">206.123.152.51:3980/tcp</td></tr>
+      <tr><td>C2 Traffic</td><td>1,371 packets (11.8% of total), ~19 min continuous</td></tr>
+      <tr><td>Confidence</td><td style="color:var(--green)"><strong>HIGH</strong> &mdash; payload extracted, C2 protocol confirmed</td></tr>
+    </tbody>
+  </table>
+  <p class="fragment fade-up" data-fragment-index="3" style="font-size:0.55em;text-align:center;max-width:none;margin-top:0.6em;font-style:italic">No rules. No signatures. <strong>Emergent classification</strong> from field dynamics alone.</p>
+  <aside class="notes">The punchline: NEOS identified an active AsyncRAT infection. C2 domain, IP, port — all extracted. No signature database, no detection rules — pure emergent classification from neural field dynamics. 11.8% of all traffic was C2 communication running for 19 minutes straight.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE PCAP-4 — 4-LAYER ARCHITECTURE         -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08b &mdash; Structure</span>
+  <h2>Emergent Architecture</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.5em">The field spontaneously organized 10 patterns into <strong>4 functional layers</strong>.</p>
+  <div class="diagram fragment fade-up" data-fragment-index="1">
+    <svg viewBox="0 0 700 200" role="img" aria-label="4-layer emergent architecture">
+      <title>PCAP Field: 4-Layer Architecture</title>
+      <!-- L4 Security (top) -->
+      <rect x="50" y="10" width="600" height="38" rx="6" fill="rgba(255,61,142,0.12)" stroke="#ff3d8e" stroke-width="1"/>
+      <text x="70" y="34" fill="#ff3d8e" font-size="10" font-weight="600">L4 Security</text>
+      <text x="230" y="34" fill="#ccc" font-size="9">suspicious_dns &middot; unsecure_protocols &middot; payload_analysis &middot; malware_analysis</text>
+      <!-- L3 Enrichment -->
+      <rect x="50" y="55" width="600" height="38" rx="6" fill="rgba(0,255,136,0.1)" stroke="#0f8" stroke-width="1"/>
+      <text x="70" y="79" fill="#0f8" font-size="10" font-weight="600">L3 Enrichment</text>
+      <text x="230" y="79" fill="#ccc" font-size="9">ip_lookup ◆ &middot; ip_geolocalization &middot; abuse_ip ◆</text>
+      <!-- L2 Processing -->
+      <rect x="50" y="100" width="600" height="38" rx="6" fill="rgba(123,97,255,0.1)" stroke="#7b61ff" stroke-width="1"/>
+      <text x="70" y="124" fill="#7b61ff" font-size="10" font-weight="600">L2 Processing</text>
+      <text x="230" y="124" fill="#ccc" font-size="9">protocol_mapping ◆ &middot; dns_resolution</text>
+      <!-- L1 Acquisition (bottom) -->
+      <rect x="50" y="145" width="600" height="38" rx="6" fill="rgba(0,212,255,0.1)" stroke="#0af" stroke-width="1"/>
+      <text x="70" y="169" fill="#0af" font-size="10" font-weight="600">L1 Acquisition</text>
+      <text x="230" y="169" fill="#ccc" font-size="9">packet_capture</text>
+      <!-- Hub markers -->
+      <text x="620" y="79" fill="#0f8" font-size="8">◆ = hub</text>
+    </svg>
+  </div>
+  <p class="fragment fade-up" data-fragment-index="2" style="font-size:0.55em;text-align:center;max-width:none;margin-top:0.4em;font-style:italic">This layered architecture was <strong>not programmed</strong>. It <strong>emerged</strong> from resonance dynamics alone.</p>
+  <aside class="notes">Four functional layers: acquisition at the bottom, processing, enrichment, and security at the top. Three hub patterns marked with diamonds. The field organized a complete security analysis pipeline from raw patterns and resonance — no architecture was specified.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE PCAP-5 — COHERENCE EVOLUTION          -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08b &mdash; Dynamics</span>
+  <h2>Coherence Evolution</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.4em">From zero to <strong>0.93</strong> in 12 cycles — <em>with default parameters</em>.</p>
+  <div class="diagram fragment fade-up" data-fragment-index="1">
+    <svg viewBox="0 0 700 280" role="img" aria-label="Coherence evolution chart">
+      <title>PCAP Session: Coherence over 12 Cycles</title>
+      <!-- Axes -->
+      <line x1="80" y1="240" x2="660" y2="240" stroke="#444" stroke-width="1"/>
+      <line x1="80" y1="240" x2="80" y2="30" stroke="#444" stroke-width="1"/>
+      <text x="370" y="270" text-anchor="middle" fill="#888" font-size="10">Cycle</text>
+      <text x="30" y="135" text-anchor="middle" fill="#888" font-size="10" transform="rotate(-90,30,135)">Coherence</text>
+      <!-- Y-axis ticks -->
+      <text x="72" y="244" text-anchor="end" fill="#666" font-size="8">0.0</text>
+      <text x="72" y="198" text-anchor="end" fill="#666" font-size="8">0.2</text>
+      <text x="72" y="152" text-anchor="end" fill="#666" font-size="8">0.4</text>
+      <text x="72" y="106" text-anchor="end" fill="#666" font-size="8">0.6</text>
+      <text x="72" y="60" text-anchor="end" fill="#666" font-size="8">0.8</text>
+      <text x="72" y="38" text-anchor="end" fill="#666" font-size="8">1.0</text>
+      <!-- Grid lines -->
+      <line x1="80" y1="198" x2="660" y2="198" stroke="#222" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <line x1="80" y1="152" x2="660" y2="152" stroke="#222" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <line x1="80" y1="106" x2="660" y2="106" stroke="#222" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <line x1="80" y1="60" x2="660" y2="60" stroke="#222" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <!-- X-axis ticks -->
+      <text x="128" y="255" text-anchor="middle" fill="#666" font-size="8">1</text>
+      <text x="176" y="255" text-anchor="middle" fill="#666" font-size="8">2</text>
+      <text x="224" y="255" text-anchor="middle" fill="#666" font-size="8">3</text>
+      <text x="272" y="255" text-anchor="middle" fill="#666" font-size="8">4</text>
+      <text x="320" y="255" text-anchor="middle" fill="#666" font-size="8">5</text>
+      <text x="368" y="255" text-anchor="middle" fill="#666" font-size="8">6</text>
+      <text x="416" y="255" text-anchor="middle" fill="#666" font-size="8">7</text>
+      <text x="464" y="255" text-anchor="middle" fill="#666" font-size="8">8</text>
+      <text x="512" y="255" text-anchor="middle" fill="#666" font-size="8">9</text>
+      <text x="560" y="255" text-anchor="middle" fill="#666" font-size="8">10</text>
+      <text x="608" y="255" text-anchor="middle" fill="#666" font-size="8">11</text>
+      <text x="656" y="255" text-anchor="middle" fill="#666" font-size="8">12</text>
+      <!-- Data: 0, 0, 0.52, 0.61, 0.71, 0.56, 0.68, 0.82, 0.76, 0.84, 0.89, 0.88, 0.91, 0.93 -->
+      <!-- Coherence: c1=0.52, c2=0.61, c3=0.71, c4=0.56, c5=0.68, c6=0.82, c7=0.76, c8=0.84, c9=0.89, c10=0.88, c11=0.91, c12=0.93 -->
+      <!-- Y mapping: 0→240, 1.0→35, scale=205 per unit -->
+      <polyline fill="none" stroke="#0f8" stroke-width="2.5" stroke-linejoin="round"
+        points="128,133  176,115  224,94  272,125  320,101  368,72  416,84  464,68  512,57  560,59  608,53  656,49"/>
+      <!-- Dots -->
+      <circle cx="128" cy="133" r="4" fill="#0f8"/>
+      <circle cx="176" cy="115" r="4" fill="#0f8"/>
+      <circle cx="224" cy="94" r="4" fill="#0f8"/>
+      <circle cx="272" cy="125" r="4" fill="#7b61ff"/><!-- wave 2 dip -->
+      <circle cx="320" cy="101" r="4" fill="#0f8"/>
+      <circle cx="368" cy="72" r="4" fill="#0f8"/>
+      <circle cx="416" cy="84" r="4" fill="#7b61ff"/><!-- wave 3 dip -->
+      <circle cx="464" cy="68" r="4" fill="#0f8"/>
+      <circle cx="512" cy="57" r="4" fill="#0f8"/>
+      <circle cx="560" cy="59" r="4" fill="#ff3d8e"/><!-- wave 4 dip -->
+      <circle cx="608" cy="53" r="4" fill="#0f8"/>
+      <circle cx="656" cy="49" r="4" fill="#0f8"/>
+      <!-- Wave annotations -->
+      <text x="176" y="145" text-anchor="middle" fill="rgba(0,212,255,0.6)" font-size="8">Wave 1</text>
+      <text x="320" y="135" text-anchor="middle" fill="rgba(0,255,136,0.6)" font-size="8">Wave 2</text>
+      <text x="464" y="98" text-anchor="middle" fill="rgba(123,97,255,0.6)" font-size="8">Wave 3</text>
+      <text x="608" y="72" text-anchor="middle" fill="rgba(255,61,142,0.6)" font-size="8">Wave 4</text>
+      <!-- Dip annotations -->
+      <text x="272" y="140" text-anchor="middle" fill="#7b61ff" font-size="7">new patterns</text>
+      <text x="416" y="99" text-anchor="middle" fill="#7b61ff" font-size="7">new patterns</text>
+    </svg>
+  </div>
+  <p class="fragment fade-up" data-fragment-index="2" style="font-size:0.5em;text-align:center;max-width:none;margin-top:0.3em">Purple dots mark temporary dips when new patterns enter &mdash; the field <strong>recovers and integrates</strong> every time.</p>
+  <aside class="notes">Coherence climbs from 0 to 0.93 in just 12 cycles. Each wave of new patterns causes a temporary dip — visible as the purple dots — but the field recovers and integrates every time. This is the signature of healthy dynamics: perturbation, integration, higher coherence.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE CROSS-DOMAIN — COMPARISON             -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">08c &mdash; Comparison</span>
+  <h2>Cross-Domain Comparison</h2>
+  <table style="font-size:0.45em;margin-top:0.5em" class="fragment fade-up" data-fragment-index="1">
+    <thead><tr><th></th><th style="color:var(--cyan)">SW Quality</th><th style="color:var(--green)">PCAP Forensics</th></tr></thead>
+    <tbody>
+      <tr><td>Domain type</td><td>Abstract reasoning</td><td>Adversarial data</td></tr>
+      <tr><td>Parameters</td><td>Tuned</td><td><strong>Default</strong></td></tr>
+      <tr><td>Patterns</td><td>69</td><td>10</td></tr>
+      <tr><td>Cycles</td><td>52</td><td>12</td></tr>
+      <tr><td>Final coherence</td><td>0.993</td><td>0.93</td></tr>
+      <tr><td>Attractors</td><td>7 basins</td><td>Triple-hub unified field</td></tr>
+      <tr><td>Expulsions</td><td>1 (Singleton)</td><td>0</td></tr>
+      <tr><td>Key discovery</td><td>Universal Invariant &Psi;</td><td>AsyncRAT malware</td></tr>
+    </tbody>
+  </table>
+  <div class="callout fragment fade-up" data-fragment-index="2" style="margin-top:0.8em;font-size:0.6em">
+    <strong>The engine is invariant.</strong> Same master equation, same dynamics. Different domains, different patterns, different scale &mdash; same emergent structure.
+  </div>
+  <aside class="notes">Side-by-side comparison. Abstract reasoning vs adversarial data. Tuned parameters vs factory defaults. 69 patterns vs 10. Different in every surface dimension — identical in the dynamics that produced emergent structure. This is domain agility.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 21 — THE UNIVERSAL INVARIANT         -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="center-slide" data-transition="convex">
+  <span class="sec-badge">10 — The Ground State</span>
+  <h2>The Universal Invariant</h2>
+  <div style="margin:1em auto;text-align:center">
+    <p style="font-size:2.5rem;font-weight:800;margin-bottom:0.2em;max-width:none" class="fragment fade-up"><span class="grad-text">Ψ</span></p>
+    <div class="callout fragment fade-up" style="font-size:0.9em;max-width:600px;margin:0 auto">
+      <strong>"What something MEANS persists;<br>how it WORKS changes."</strong>
+    </div>
+    <p class="fragment fade-up" style="font-size:0.6em;margin-top:1em;max-width:none;text-align:center">The deepest attractor in the field. The ground state of software quality. The invariant that survived all 52 cycles of dynamics.</p>
+  </div>
+  <aside class="notes">This is the deepest insight NEOS discovered. Ψ — the universal invariant. Meaning persists, mechanism changes. This is the ground truth of quality.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 22 — ROADMAP                         -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">18 — The Future</span>
+  <h2>Roadmap</h2>
+  <div class="diagram">
+    <svg viewBox="0 0 600 250" role="img" aria-label="Three concentric rings: Near, Medium, Long term">
+      <title>NEOS Roadmap: Near, Medium, and Long Term</title>
+      <g class="fragment" data-fragment-index="3">
+        <circle cx="300" cy="125" r="115" fill="none" stroke="rgba(255,61,142,0.2)" stroke-width="1.5"/>
+        <text x="300" y="20" text-anchor="middle" fill="#ff3d8e" font-size="10" font-weight="600">LONG-TERM</text>
+        <text x="440" y="60" fill="#c93070" font-size="8">Quantum semantics hardware</text>
+        <text x="440" y="74" fill="#c93070" font-size="8">Neural field co-processors</text>
+        <text x="440" y="88" fill="#c93070" font-size="8">Cross-domain field federation</text>
+      </g>
+      <g class="fragment" data-fragment-index="2">
+        <circle cx="300" cy="125" r="75" fill="none" stroke="rgba(123,97,255,0.3)" stroke-width="1.5"/>
+        <text x="300" y="60" text-anchor="middle" fill="#7b61ff" font-size="10" font-weight="600">MEDIUM-TERM</text>
+        <text x="130" y="90" fill="#5a44cc" font-size="8">Multi-agent orchestration</text>
+        <text x="130" y="104" fill="#5a44cc" font-size="8">Visual field explorer</text>
+        <text x="130" y="118" fill="#5a44cc" font-size="8">Plugin ecosystem</text>
+      </g>
+      <g class="fragment" data-fragment-index="1">
+        <circle cx="300" cy="125" r="35" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="2"/>
+        <text x="300" y="120" text-anchor="middle" fill="#0af" font-size="9" font-weight="600">NOW</text>
+        <text x="300" y="134" text-anchor="middle" fill="#088" font-size="7">Reference impl</text>
+        <text x="300" y="146" text-anchor="middle" fill="#088" font-size="7">CLI + Core SDK</text>
+      </g>
+    </svg>
+  </div>
+  <aside class="notes">Three horizons. Near-term: reference implementation and CLI. Medium: visual tools, multi-agent, plugins. Long-term: hardware integration and federation.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 23 — AGENT ECOSYSTEM                 -->
+<!-- ═══════════════════════════════════════════ -->
+<section data-transition="slide">
+  <span class="sec-badge">12 — Agents</span>
+  <h2>The Agent Ecosystem</h2>
+  <p style="font-size:0.6em;max-width:none;margin-bottom:0.5em">The developer of the future is a <strong>field architect</strong>.</p>
+  <div class="diagram fragment fade-up">
+    <svg viewBox="0 0 600 200" role="img" aria-label="Agent network converging on shared reasoning state">
+      <title>Agent Ecosystem: Shared Neural Field Reasoning</title>
+      <circle cx="100" cy="55" r="30" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1.5"/>
+      <text x="100" y="51" text-anchor="middle" fill="#0af" font-size="10" font-weight="600">Research</text>
+      <text x="100" y="65" text-anchor="middle" fill="#088" font-size="8">Agent</text>
+      <circle cx="250" cy="40" r="30" fill="rgba(123,97,255,0.08)" stroke="#7b61ff" stroke-width="1.5"/>
+      <text x="250" y="36" text-anchor="middle" fill="#7b61ff" font-size="10" font-weight="600">Analysis</text>
+      <text x="250" y="50" text-anchor="middle" fill="#5a44cc" font-size="8">Agent</text>
+      <circle cx="400" cy="40" r="30" fill="rgba(0,255,136,0.08)" stroke="#0f8" stroke-width="1.5"/>
+      <text x="400" y="36" text-anchor="middle" fill="#0f8" font-size="10" font-weight="600">Creative</text>
+      <text x="400" y="50" text-anchor="middle" fill="#0a6" font-size="8">Agent</text>
+      <circle cx="530" cy="55" r="30" fill="rgba(255,215,0,0.08)" stroke="#fd0" stroke-width="1.5"/>
+      <text x="530" y="51" text-anchor="middle" fill="#fd0" font-size="10" font-weight="600">Evaluation</text>
+      <text x="530" y="65" text-anchor="middle" fill="#ba0" font-size="8">Agent</text>
+      <line x1="100" y1="85" x2="310" y2="145" stroke="#0af" stroke-width="1" opacity="0.4"/>
+      <line x1="250" y1="70" x2="310" y2="145" stroke="#7b61ff" stroke-width="1" opacity="0.4"/>
+      <line x1="400" y1="70" x2="310" y2="145" stroke="#0f8" stroke-width="1" opacity="0.4"/>
+      <line x1="530" y1="85" x2="310" y2="145" stroke="#fd0" stroke-width="1" opacity="0.4"/>
+      <rect x="220" y="135" width="180" height="45" rx="10" fill="rgba(0,212,255,0.08)" stroke="#0af" stroke-width="1.5"/>
+      <text x="310" y="155" text-anchor="middle" fill="#0af" font-size="10" font-weight="600">Shared Reasoning State</text>
+      <text x="310" y="170" text-anchor="middle" fill="#088" font-size="8">Neural Field</text>
+    </svg>
+  </div>
+  <p class="fragment fade-up" style="font-size:0.6em;font-style:italic;text-align:center;max-width:none">Agents don't just exchange messages — they share a <strong>continuous reasoning substrate</strong>.</p>
+  <aside class="notes">Multiple AI agents working on the same neural field. Not just exchanging messages — sharing a continuous reasoning state. This is fundamentally different from current agent frameworks.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SLIDE 24 — CALL TO ACTION                  -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="center-slide" data-transition="convex">
+  <h2 style="margin-bottom:0.6em">Join the Field</h2>
+  <div class="grid-3" style="max-width:90%;margin:0 auto">
+    <div class="cta-card fragment fade-up" data-fragment-index="1">
+      <h3 style="color:var(--cyan);font-size:1em">Build</h3>
+      <p style="font-size:0.5em;margin:0;color:var(--text-dim)">Implement the reference runtime. Write field configurations. Extend the shell.</p>
+    </div>
+    <div class="cta-card fragment fade-up" data-fragment-index="2">
+      <h3 style="color:var(--purple);font-size:1em">Research</h3>
+      <p style="font-size:0.5em;margin:0;color:var(--text-dim)">Explore the mathematics. Validate with new domains. Publish findings.</p>
+    </div>
+    <div class="cta-card fragment fade-up" data-fragment-index="3">
+      <h3 style="color:var(--pink);font-size:1em">Connect</h3>
+      <p style="font-size:0.5em;margin:0;color:var(--text-dim)">Join the community. Share ideas. Shape the future of cognitive computing.</p>
+    </div>
+  </div>
+  <div class="fragment fade-up" data-fragment-index="4" style="margin-top:1em;text-align:center">
+    <p style="font-size:0.5em;max-width:none;color:var(--text-dim);margin-bottom:0.5em">Tested with <strong style="color:#da7756">Claude Code</strong> &middot; <strong style="color:#4285F4">Gemini CLI</strong> &middot; <strong style="color:#00b96b">OpenCode (Minimax)</strong></p>
+    <p style="font-size:0.85em;font-style:italic;max-width:none;color:var(--text)"><em style="color:var(--text)">"The last operating system will not run on silicon.<br>It will run on <strong>understanding</strong>."</em></p>
+  </div>
+  <p class="fragment fade-up" data-fragment-index="5" style="margin-top:1em;font-size:0.55em;max-width:none;text-align:center">
+    <a href="https://github.com/Samuele95/neos" style="color:var(--cyan)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:6px"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      github.com/Samuele95/neos
+    </a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="https://samuele95.github.io/neos/neos-paper.pdf" target="_blank" rel="noopener" style="color:var(--cyan)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Read the Paper (PDF)</a>
+  </p>
+  <aside class="notes">Close with the call to action. Three ways to get involved: build, research, connect. The closing quote lands the thesis one final time.</aside>
+</section>
+
+</div><!-- /slides -->
+</div><!-- /reveal -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Motion preference
+  var motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Initialize Reveal.js
+  Reveal.initialize({
+    hash: true,
+    hashOneBasedIndex: true,
+    slideNumber: 'c/t',
+    width: 1100,
+    height: 700,
+    margin: 0.04,
+    minScale: 0.2,
+    maxScale: 2.0,
+    transition: 'slide',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    center: false,
+    controls: true,
+    controlsTutorial: true,
+    progress: true,
+    history: true,
+    keyboard: true,
+    overview: true,
+    touch: true,
+    loop: false,
+    fragments: true,
+    fragmentInURL: true,
+    help: true,
+    showNotes: false,
+    autoPlayMedia: null,
+    autoSlide: 0,
+    mouseWheel: false,
+    hideInactiveCursor: true,
+    hideCursorTime: 3000
+  });
+
+  // Flowing wave background canvas
+  (function() {
+    var canvas = document.getElementById('wave-bg');
+    if (!canvas || !motionOK) return;
+    var ctx = canvas.getContext('2d');
+    var w, h;
+    var waves = [
+      { y: 0.82, amp: 28, freq: 0.003, speed: 0.0004, color: '0,180,255', alpha: 0.06 },
+      { y: 0.78, amp: 35, freq: 0.002, speed: 0.0003, color: '0,180,255', alpha: 0.04 },
+      { y: 0.72, amp: 22, freq: 0.004, speed: 0.00055, color: '90,70,210', alpha: 0.05 },
+      { y: 0.68, amp: 40, freq: 0.0015, speed: 0.00025, color: '90,70,210', alpha: 0.03 },
+      { y: 0.62, amp: 18, freq: 0.005, speed: 0.0006, color: '0,180,255', alpha: 0.025 },
+    ];
+    var STEPS = 120;
+    function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+    resize();
+    function draw(t) {
+      ctx.clearRect(0, 0, w, h);
+      for (var wi = 0; wi < waves.length; wi++) {
+        var wave = waves[wi];
+        ctx.beginPath();
+        var baseY = wave.y * h;
+        ctx.moveTo(0, h);
+        ctx.lineTo(0, baseY + wave.amp * Math.sin(wave.speed * t));
+        for (var i = 1; i <= STEPS; i++) {
+          var x = (i / STEPS) * w;
+          var y = baseY
+            + wave.amp * Math.sin(x * wave.freq + t * wave.speed)
+            + wave.amp * 0.5 * Math.sin(x * wave.freq * 2.3 + t * wave.speed * 1.7 + 1)
+            + wave.amp * 0.3 * Math.cos(x * wave.freq * 0.7 + t * wave.speed * 0.6 + 2);
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(w, h);
+        ctx.closePath();
+        var grad = ctx.createLinearGradient(0, baseY - wave.amp, 0, h);
+        grad.addColorStop(0, 'rgba(' + wave.color + ',' + wave.alpha + ')');
+        grad.addColorStop(0.5, 'rgba(' + wave.color + ',' + (wave.alpha * 0.3) + ')');
+        grad.addColorStop(1, 'rgba(' + wave.color + ',0)');
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+    draw(0);
+    var rt;
+    window.addEventListener('resize', function() { clearTimeout(rt); rt = setTimeout(resize, 200); });
+  })();
+
+  // GSAP Animations
+  if (typeof gsap === 'undefined' || !motionOK) return;
+
+  // Counter animation for stats slide
+  function animateCounters() {
+    var counters = document.querySelectorAll('.counter');
+    for (var i = 0; i < counters.length; i++) {
+      var el = counters[i];
+      if (el.dataset.animated) continue;
+      var target = parseFloat(el.dataset.target);
+      var decimals = parseInt(el.dataset.decimals) || 0;
+      (function(element, tgt, dec) {
+        var obj = { val: 0 };
+        gsap.to(obj, {
+          val: tgt,
+          duration: 1.8,
+          ease: 'power2.out',
+          onUpdate: function() {
+            element.textContent = dec > 0 ? obj.val.toFixed(dec) : Math.round(obj.val);
+          }
+        });
+      })(el, target, decimals);
+      el.dataset.animated = '1';
+    }
+  }
+
+  // Title character cascade
+  function animateTitle() {
+    var heroText = document.getElementById('hero-text');
+    if (!heroText || heroText.dataset.animated) return;
+    var text = heroText.textContent;
+    heroText.textContent = '';
+    for (var i = 0; i < text.length; i++) {
+      var s = document.createElement('span');
+      s.className = 'hero-char';
+      s.textContent = text[i];
+      s.style.opacity = '0';
+      s.style.transform = 'translateY(40px) rotateX(90deg)';
+      heroText.appendChild(s);
+    }
+    gsap.to(heroText.querySelectorAll('.hero-char'), {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      duration: 0.6,
+      stagger: 0.08,
+      ease: 'back.out(1.7)',
+      delay: 0.3
+    });
+    heroText.dataset.animated = '1';
+  }
+
+  // Trigger animations on slide change
+  Reveal.on('slidechanged', function(event) {
+    var slide = event.currentSlide;
+    if (slide.querySelector('.counter')) {
+      setTimeout(animateCounters, 400);
+    }
+    if (event.indexh === 0) {
+      animateTitle();
+    }
+  });
+
+  // Trigger on fragment shown (for counters in fragments)
+  Reveal.on('fragmentshown', function(event) {
+    var frag = event.fragment;
+    if (frag.querySelector && frag.querySelector('.counter')) {
+      setTimeout(animateCounters, 200);
+    }
+  });
+
+  // Animate title on first load if starting on slide 0
+  if (Reveal.getState().indexh === 0) {
+    setTimeout(animateTitle, 500);
+  }
+});
+</script>
+</body>
+</html>
